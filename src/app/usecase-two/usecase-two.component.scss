@@ -1,0 +1,67 @@
+.header {
+  font-size: 2.5em;
+  font-weight: bold;
+  color: var(--font-title-color);
+  padding: 0.5em;
+}
+
+.loader {
+  height: 60vh;
+}
+
+.calver-selection {
+  padding: 1em;
+  display: flex;
+  gap: 1em;
+}
+
+.tracker-wrapper {
+  display: flex;
+  height: 80vh;
+  .filters {
+    background-color: #fff;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+    max-height: 66vh;
+    width: 15%;
+    padding: 1em 1em 3.2em 1em;
+    h3 {
+      font-size: 1.4em;
+      font-weight: bold;
+      color: var(--font-title-color);
+    }
+
+    .option-type {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      h4 {
+        font-size: 1.2em;
+        font-weight: 500;
+        color: var(--font-title-color);
+      }
+
+      .filter-select {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
+      }
+    }
+
+    .component-select {
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 0.5em;
+      width: 100%;
+    }
+  }
+  .changes {
+    width: 80%;
+    padding: 0 1em;
+  }
+}

@@ -1,0 +1,99 @@
+<div class="container">
+  <div class="header">Changes Tracker</div>
+  <div class="calver-selection">
+    <div class="source">
+      <app-calver-select
+        title="Source version"
+        [options]="options"
+        [filteredOptions]="filteredOptionsSource | async"
+        [calverControl]="advisoryForm.controls['source']"
+      ></app-calver-select>
+    </div>
+    <div class="target">
+      <app-calver-select
+        title="Target version"
+        [options]="options"
+        [filteredOptions]="filteredOptionsTarget | async"
+        [calverControl]="advisoryForm.controls['target']"
+      ></app-calver-select>
+    </div>
+  </div>
+  <div class="loader center" *ngIf="isLoading">
+    <mat-spinner></mat-spinner>
+  </div>
+  <div class="tracker-wrapper" *ngIf="advisoryForm.valid && !isLoading">
+    <div class="filters">
+      <h3>Filter options</h3>
+      <div class="option-type">
+        <h4>Discipline</h4>
+        <div class="filter-select">
+          <ng-container *ngFor="let discipline of disciplines">
+            <mat-slide-toggle [checked]="discipline.isSelected">{{
+              discipline.name
+            }}</mat-slide-toggle>
+          </ng-container>
+        </div>
+      </div>
+      <div class="changetype option-type">
+        <h4>Change Type</h4>
+        <div class="filter-select">
+          <ng-container *ngFor="let type of changeType">
+            <mat-slide-toggle [checked]="type.isChecked">{{
+              type.name
+            }}</mat-slide-toggle>
+          </ng-container>
+        </div>
+      </div>
+      <!-- <div class="calver option-type">
+          <h4>
+            Calver
+            <mat-slide-toggle #calverEnabled checked="false"></mat-slide-toggle>
+          </h4>
+          <app-calver-select
+            [disabled]="!calverEnabled.checked"
+            title="Filter by Calver"
+            [options]="options"
+            [filteredOptions]="filteredOptionsSource | async"
+            [calverControl]="advisoryForm.controls['filterByCalver']"
+          ></app-calver-select>
+        </div> -->
+      <div class="component-select option-type">
+        <h4>
+          Products
+          <mat-slide-toggle #productEnabled checked="false"></mat-slide-toggle>
+        </h4>
+
+        <ng-container *ngFor="let component of products">
+          <mat-chip-option
+            [disabled]="!productEnabled.checked"
+            [selected]="component.isSelected"
+            >{{ component.name }}</mat-chip-option
+          >
+        </ng-container>
+      </div>
+
+      <div class="component-select option-type">
+        <h4>
+          Components
+          <mat-slide-toggle
+            #componentEnabled
+            checked="false"
+          ></mat-slide-toggle>
+        </h4>
+        <ng-container *ngFor="let component of components">
+          <mat-chip-option
+            [disabled]="!componentEnabled.checked"
+            [selected]="component.isSelected"
+            >{{ component.name }}</mat-chip-option
+          >
+        </ng-container>
+      </div>
+    </div>
+    <div class="changes">
+      <app-change-table
+        [dataSource]="dataSource"
+        [displayedColumns]="displayedColumns"
+      ></app-change-table>
+    </div>
+  </div>
+</div>

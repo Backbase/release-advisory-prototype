@@ -1,0 +1,136 @@
+<div class="container">
+  <h1>Release Advisory</h1>
+  <div class="product-list margin-top-xs">
+    <h2>Select Products</h2>
+    <div class="product">
+      <mat-chip-listbox multiple="true">
+        <mat-chip-option
+          *ngFor="let product of productList"
+          [selected]="product.isSelected"
+          >{{ product.name }}</mat-chip-option
+        >
+      </mat-chip-listbox>
+    </div>
+  </div>
+
+  <div class="discipline-list margin-top-xs">
+    <h2>Select Discipline</h2>
+    <div class="discipline">
+      <mat-chip-listbox multiple="true">
+        <mat-chip-option
+          *ngFor="let discipline of disciplineList"
+          [selected]="discipline.isSelected"
+          >{{ discipline.name }}</mat-chip-option
+        >
+      </mat-chip-listbox>
+    </div>
+  </div>
+
+  <form [formGroup]="releaseAdivsorForm" class="version-selector margin-top-xs">
+    <div class="current-version">
+      <h2>Current Version</h2>
+      <mat-form-field>
+        <mat-label>Current Version</mat-label>
+        <input
+          type="text"
+          placeholder="Pick one"
+          aria-label="Number"
+          matInput
+          [matAutocomplete]="auto"
+          formControlName="sourceVersion"
+        />
+        <button
+          type="button"
+          matSuffix
+          *ngIf="releaseAdivsorForm.controls.sourceVersion.value"
+          mat-icon-button
+          aria-label="Clear"
+          (click)="clear(releaseAdivsorForm.controls.sourceVersion)"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+          <mat-option
+            *ngFor="let source of filteredSourceVersion | async"
+            [value]="source"
+          >
+            {{ source }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+
+    <div class="target-version">
+      <h2>Target Version</h2>
+      <mat-form-field>
+        <mat-label>Target Version</mat-label>
+        <input
+          type="text"
+          placeholder="Pick one"
+          aria-label="Number"
+          matInput
+          [matAutocomplete]="auto1"
+          formControlName="targetVersion"
+        />
+        <button
+          type="button"
+          matSuffix
+          *ngIf="releaseAdivsorForm.controls.targetVersion.value"
+          mat-icon-button
+          aria-label="Clear"
+          (click)="clear(releaseAdivsorForm.controls.targetVersion)"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+        <mat-autocomplete autoActiveFirstOption #auto1="matAutocomplete">
+          <mat-option
+            *ngFor="let target of filteredTargetVersion | async"
+            [value]="target"
+          >
+            {{ target }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+  </form>
+
+  <div class="example-button-container">
+    <button
+      mat-mini-fab
+      color="primary"
+      aria-label="Example icon button with a filter list icon"
+      (click)="showFilters = !showFilters"
+      *ngIf="releaseAdivsorForm.valid && !isLoading"
+    >
+      <mat-icon>filter_list</mat-icon>
+    </button>
+  </div>
+  <div class="content-container">
+    <div class="filter" *ngIf="showFilters">
+      <h3>Filter Options</h3>
+      <h4>Change Type</h4>
+      <section *ngFor="let changeType of changeTypeList; let i = index">
+        <mat-checkbox [(ngModel)]="changeType.isChecked">
+          {{ changeType.name }}
+        </mat-checkbox>
+      </section>
+
+      <h4 class="margin-top-xs">Components</h4>
+      <section *ngFor="let component of componentList; let i = index">
+        <mat-checkbox [(ngModel)]="component.isSelected">
+          {{ component.name }}
+        </mat-checkbox>
+      </section>
+    </div>
+    <div class="release-details">
+      <div class="loader center" *ngIf="isLoading">
+        <mat-spinner></mat-spinner>
+      </div>
+      <app-change-table
+        *ngIf="releaseAdivsorForm.valid && !isLoading"
+        [dataSource]="dataSource"
+        [displayedColumns]="displayedColumns"
+      ></app-change-table>
+    </div>
+  </div>
+</div>
