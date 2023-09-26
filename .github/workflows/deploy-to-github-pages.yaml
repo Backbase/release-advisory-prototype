@@ -15,10 +15,11 @@ jobs:
 
       - name: Install and Build
         run: |
-          npm ci
-          npm run build
+          # npm ci
+          # npm run build
+          ls -a
 
-      - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: docs
+      # - name: Deploy
+      #   uses: JamesIves/github-pages-deploy-action@v4
+      #   with:
+      #     folder: docs
