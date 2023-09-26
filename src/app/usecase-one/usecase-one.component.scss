@@ -1,0 +1,37 @@
+.margin-top-xs {
+  margin-top: 2rem;
+}
+
+.version-selector {
+  display: flex;
+  align-items: flex-start;
+  gap: 5rem;
+}
+
+.calver-selector-form {
+  display: flex;
+}
+
+.mat-mdc-chip.mat-mdc-standard-chip {
+  border-radius: 3px;
+  padding: 0.3rem;
+}
+
+.filter {
+  background-color: #fff;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  width: 20%;
+  padding: 1em;
+}
+
+.content-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 1rem;
+}
+
+.release-details {
+  width: 100%;
+}

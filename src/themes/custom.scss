@@ -1,0 +1,13 @@
+@use './custom-vars.scss';
+@use './custom-mat.scss';
+
+.container {
+  max-height: calc(100% - 64px);
+  padding: 1.2em;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

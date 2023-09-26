@@ -1,0 +1,27 @@
+<mat-form-field class="example-full-width">
+  <mat-label>{{ title }}</mat-label>
+  <input
+    type="text"
+    placeholder="Select the calver"
+    [formControl]="calverControl"
+    matInput
+    [matAutocomplete]="auto"
+    [readonly]="disabled"
+    [disabled]="disabled"
+  />
+  <button
+    type="button"
+    matSuffix
+    *ngIf="calverControl.value"
+    mat-icon-button
+    aria-label="Clear"
+    (click)="clear()"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+  <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+    <mat-option *ngFor="let option of filteredOptions" [value]="option">
+      {{ option }}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>
