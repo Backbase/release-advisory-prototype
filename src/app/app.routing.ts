@@ -3,8 +3,8 @@ import { Routes } from '@angular/router';
 export const APP_ROUTES: Routes = [
   {
     path: '',
-    loadComponent: () =>
-      import('./home/home.component').then((m) => m.HomeComponent),
+    redirectTo: 'prototype-one',
+    pathMatch: 'full',
   },
   {
     path: 'prototype-one',
