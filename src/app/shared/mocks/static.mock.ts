@@ -5,6 +5,10 @@ import {
   ProductComponent,
   ReleaseChanges,
 } from '../models/static.model';
+import {
+  ChangeTypeName,
+  Disciplines,
+} from './release-advisory-mock-generator/constants';
 
 export const calVerOptions: string[] = [
   '2022.01',
@@ -23,18 +27,18 @@ export const calVerOptions: string[] = [
 ];
 
 export const disciplines: Discipline[] = [
-  { name: 'Web', isSelected: true },
-  { name: 'Backend', isSelected: true },
-  { name: 'iOS', isSelected: true },
-  { name: 'Android', isSelected: true },
+  { name: Disciplines.web, isSelected: true },
+  { name: Disciplines.backend, isSelected: true },
+  { name: Disciplines.ios, isSelected: true },
+  { name: Disciplines.android, isSelected: true },
 ];
 
 export const changeType: ChangeType[] = [
-  { name: 'New feature', color: 'primary', isChecked: true },
-  { name: 'Enhancements', color: 'primary', isChecked: false },
-  { name: 'Bug fix', color: 'bugfix', isChecked: true },
-  { name: 'Deprecations', color: 'accent', isChecked: true },
-  { name: 'Breaking change', color: 'warn', isChecked: true },
+  { name: ChangeTypeName.feature, color: 'primary', isChecked: true },
+  { name: ChangeTypeName.bugFix, color: 'bugfix', isChecked: true },
+  { name: ChangeTypeName.deprecated, color: 'accent', isChecked: true },
+  { name: ChangeTypeName.breakingChange, color: 'warn', isChecked: true },
+  { name: ChangeTypeName.securityFix, color: 'primary', isChecked: true },
 ];
 
 export const components: ProductComponent[] = [
@@ -123,7 +127,7 @@ export const productList: ProductComponent[] = [
   {
     name: 'Digital Engage',
     isSelected: false,
-  }
+  },
 ];
 
 export const dataSource: ReleaseChanges[] = [
