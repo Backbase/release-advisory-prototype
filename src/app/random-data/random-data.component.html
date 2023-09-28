@@ -3,28 +3,50 @@
   <div class="product-list margin-top-xs">
     <h2>Select Products</h2>
     <div class="product">
-      <mat-radio-group aria-label="Select an option">
+      <mat-radio-group
+        aria-label="Select an option"
+        [formControl]="advisoryForm.controls.product"
+      >
         <mat-radio-button
           color="primary"
           *ngFor="let product of productList"
           [value]="product.name"
           [checked]="product.isSelected"
-          (change)="onProductChange(product)"
           >{{ product.name }}</mat-radio-button
         >
       </mat-radio-group>
+      <div class="calver-selection-wrapper">
+        <h2>Select Calver</h2>
+        <div class="calver-selection">
+          <div class="source">
+            <app-calver-select
+              title="Source version"
+              [options]="options"
+              [filteredOptions]="filteredOptionsSource | async"
+              [calverControl]="advisoryForm.controls['source']"
+            ></app-calver-select>
+          </div>
+          <div class="target">
+            <app-calver-select
+              title="Target version"
+              [options]="options"
+              [filteredOptions]="filteredOptionsTarget | async"
+              [calverControl]="advisoryForm.controls['target']"
+            ></app-calver-select>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-
-  <div class="release-details">
-    <div class="loader center" *ngIf="isLoading; else loadTable">
-      <mat-spinner></mat-spinner>
+    <div class="release-details">
+      <div class="loader center" *ngIf="isLoading; else loadTable">
+        <mat-spinner></mat-spinner>
+      </div>
+      <ng-template #loadTable>
+        <app-change-table-random
+          [dataSource]="dataSource"
+          [displayedColumns]="displayedColumns"
+        ></app-change-table-random>
+      </ng-template>
     </div>
-    <ng-template #loadTable>
-      <app-change-table-random
-        [dataSource]="dataSource"
-        [displayedColumns]="displayedColumns"
-      ></app-change-table-random>
-    </ng-template>
   </div>
 </div>
