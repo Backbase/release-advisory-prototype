@@ -30,7 +30,7 @@ export class RandomDataComponent {
   public productList = productList;
   displayedColumns: ChangeTitle[] = changeTypeHeadings;
   dataSource = new MatTableDataSource<Changes>([]);
-  isLoading = null;
+  isLoading = false;
 
   onProductChange(product: ProductComponent): void {
     this.isLoading = true;
