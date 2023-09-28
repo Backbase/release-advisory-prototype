@@ -1,0 +1,15 @@
+.margin-top-xs {
+  margin-top: 2rem;
+}
+
+.loader {
+  height: 60vh;
+  display: flex;
+  justify-content: center;
+}
+
+.release-details {
+  @extend .margin-top-xs;
+  width: 100%;
+  padding-bottom: 2em;
+}

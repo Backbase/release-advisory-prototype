@@ -4,10 +4,8 @@ export interface Changes {
   calVer: string;
   component: string;
   product: string;
-  // discipline: Discipline;
-  discipline: string;
-  // changeType: ChangeType;
-  changeType: string;
+  discipline: Discipline;
+  changeType: ChangeType;
   mitigationLink: string;
   description: string;
   version: string;

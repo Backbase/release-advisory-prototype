@@ -1,4 +1,30 @@
-<app-change-table-random
-  [dataSource]="dataSource"
-  [displayedColumns]="displayedColumns"
-></app-change-table-random>
+<div class="container">
+  <h1>Release Advisory</h1>
+  <div class="product-list margin-top-xs">
+    <h2>Select Products</h2>
+    <div class="product">
+      <mat-radio-group aria-label="Select an option">
+        <mat-radio-button
+          color="primary"
+          *ngFor="let product of productList"
+          [value]="product.name"
+          [checked]="product.isSelected"
+          (change)="onProductChange(product)"
+          >{{ product.name }}</mat-radio-button
+        >
+      </mat-radio-group>
+    </div>
+  </div>
+
+  <div class="release-details">
+    <div class="loader center" *ngIf="isLoading; else loadTable">
+      <mat-spinner></mat-spinner>
+    </div>
+    <ng-template #loadTable>
+      <app-change-table-random
+        [dataSource]="dataSource"
+        [displayedColumns]="displayedColumns"
+      ></app-change-table-random>
+    </ng-template>
+  </div>
+</div>

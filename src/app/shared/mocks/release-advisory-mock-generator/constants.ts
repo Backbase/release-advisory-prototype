@@ -23,14 +23,24 @@ export const changeTypesOptions: ChangeTypeName[] = [
   ChangeTypeName.enhancement,
 ];
 
-export const products = [
-  'Retail Banking USA',
-  'Retail Banking Universal',
-  'Business Banking USA',
-  'Business Banking Universal',
-  'Wealth Management',
-  'Digital Assist',
-  'Digital Engage',
+export enum ProductComponents {
+  retailBankingUSA = 'Retail Banking USA',
+  retailBankingUniversal = 'Retail Banking Universal',
+  businessBankingUSA = 'Business Banking USA',
+  businessBankingUniversal = 'Business Banking Universal',
+  wealthManagement = 'Wealth Management',
+  digitalAssist = 'Digital Assist',
+  digitalEngage = 'Digital Engage',
+}
+
+export const products: ProductComponents[] = [
+  ProductComponents.businessBankingUSA,
+  ProductComponents.businessBankingUniversal,
+  ProductComponents.digitalAssist,
+  ProductComponents.digitalEngage,
+  ProductComponents.retailBankingUSA,
+  ProductComponents.retailBankingUniversal,
+  ProductComponents.wealthManagement,
 ];
 
 export const disciplines: Disciplines[] = [

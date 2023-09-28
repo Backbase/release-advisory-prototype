@@ -1,6 +1,7 @@
 import {
   ChangeTypeName,
   Disciplines,
+  ProductComponents,
 } from '../mocks/release-advisory-mock-generator/constants';
 
 export type ChangeTitle =
@@ -26,7 +27,7 @@ export interface Discipline {
 }
 
 export interface ProductComponent {
-  name: string;
+  name: ProductComponents;
   isSelected: boolean;
 }
 

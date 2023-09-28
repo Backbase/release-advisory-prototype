@@ -8,6 +8,7 @@ import {
 import {
   ChangeTypeName,
   Disciplines,
+  ProductComponents,
 } from './release-advisory-mock-generator/constants';
 
 export const calVerOptions: string[] = [
@@ -41,7 +42,7 @@ export const changeType: ChangeType[] = [
   { name: ChangeTypeName.securityFix, color: 'primary', isChecked: true },
 ];
 
-export const components: ProductComponent[] = [
+export const components: any[] = [
   {
     name: 'Software component A',
     isSelected: false,
@@ -64,7 +65,7 @@ export const components: ProductComponent[] = [
   },
 ];
 
-export const journeys: ProductComponent[] = [
+export const journeys: any[] = [
   {
     name: 'Accounts & Transactions',
     isSelected: false,
@@ -101,31 +102,31 @@ export const changeTypeHeadings: ChangeTitle[] = [
 
 export const productList: ProductComponent[] = [
   {
-    name: 'Retail Banking',
+    name: ProductComponents.retailBankingUSA,
     isSelected: false,
   },
   {
-    name: 'Business Banking',
+    name: ProductComponents.retailBankingUniversal,
     isSelected: false,
   },
   {
-    name: 'Wealth Management',
+    name: ProductComponents.businessBankingUSA,
     isSelected: false,
   },
   {
-    name: 'Digital Onboarding',
+    name: ProductComponents.businessBankingUniversal,
     isSelected: false,
   },
   {
-    name: 'Digital Lending',
+    name: ProductComponents.wealthManagement,
     isSelected: false,
   },
   {
-    name: 'Digital Assist',
+    name: ProductComponents.digitalAssist,
     isSelected: false,
   },
   {
-    name: 'Digital Engage',
+    name: ProductComponents.digitalEngage,
     isSelected: false,
   },
 ];
