@@ -7,7 +7,7 @@
   </ng-template>
 </h1>
 <div mat-dialog-content>
-  <ng-container *ngIf="data['description']; oldInformation">
+  <ng-container *ngIf="data['description']; else oldInformation">
     {{ data['description'] }}
   </ng-container>
 
