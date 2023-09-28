@@ -1,0 +1,18 @@
+<h1 mat-dialog-title>
+  <ng-container *ngIf="data['title']; else oldTitle">
+    {{ data['title'] }}
+  </ng-container>
+  <ng-template #oldTitle>
+    [{{ data.changeType.name }}]: {{ data.change }}
+  </ng-template>
+</h1>
+<div mat-dialog-content>
+  <ng-container *ngIf="data['description']; else oldInformation">
+    {{ data['description'] }}
+  </ng-container>
+
+  <ng-template #oldInformation>{{ data | json }}</ng-template>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-flat-button color="primary" mat-dialog-close>Close</button>
+</div>
