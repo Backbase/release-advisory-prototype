@@ -15,6 +15,16 @@ export type ChangeTitle =
   | 'Change Type'
   | 'View';
 
+export type ChangeTitleRandom =
+  | 'Change'
+  | 'Discipline'
+  | 'Product'
+  | 'Calver'
+  | 'Component'
+  | 'Version'
+  | 'Change Type'
+  | 'View';
+
 export interface ChangeType {
   name: ChangeTypeName;
   color: string;

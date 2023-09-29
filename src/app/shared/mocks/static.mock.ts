@@ -1,5 +1,6 @@
 import {
   ChangeTitle,
+  ChangeTitleRandom,
   ChangeType,
   Discipline,
   ProductComponent,
@@ -28,10 +29,10 @@ export const calVerOptions: string[] = [
 ];
 
 export const disciplines: Discipline[] = [
-  { name: Disciplines.web, isSelected: true },
-  { name: Disciplines.backend, isSelected: true },
-  { name: Disciplines.ios, isSelected: true },
-  { name: Disciplines.android, isSelected: true },
+  { name: Disciplines.web, isSelected: false },
+  { name: Disciplines.backend, isSelected: false },
+  { name: Disciplines.ios, isSelected: false },
+  { name: Disciplines.android, isSelected: false },
 ];
 
 export const changeType: ChangeType[] = [
@@ -96,6 +97,16 @@ export const changeTypeHeadings: ChangeTitle[] = [
   'Journey',
   'Component',
   'Version',
+  'Change Type',
+  'View',
+];
+
+export const changeTypeHeadingsRandom: ChangeTitleRandom[] = [
+  'Calver',
+  'Component',
+  'Version',
+  'Discipline',
+  'Change',
   'Change Type',
   'View',
 ];
