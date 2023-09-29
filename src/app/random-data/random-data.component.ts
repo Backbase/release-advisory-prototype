@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ChangeTitle } from '../shared/models/static.model';
+import { ChangeTitleRandom, Discipline } from '../shared/models/static.model';
 import { MatTableDataSource } from '@angular/material/table';
 import {
   calVerOptions,
-  changeTypeHeadings,
+  changeTypeHeadingsRandom,
   productList,
+  disciplines,
 } from '../shared/mocks/static.mock';
 import { MatChipsModule } from '@angular/material/chips';
 import { ChangeTableRandomComponent } from '../shared/components/change-table-random/change-table-random.component';
@@ -40,7 +41,10 @@ import { Observable, map, startWith } from 'rxjs';
 })
 export class RandomDataComponent implements OnInit {
   public productList = productList;
-  displayedColumns: ChangeTitle[] = changeTypeHeadings;
+  disciplineList = disciplines.filter(
+    (discipline) => discipline.name !== Disciplines.backend
+  );
+  displayedColumns: ChangeTitleRandom[] = changeTypeHeadingsRandom;
   dataSource = new MatTableDataSource<Changes>([]);
   isLoading = false;
   readonly options: string[] = calVerOptions;
@@ -48,6 +52,7 @@ export class RandomDataComponent implements OnInit {
   advisoryForm = this.fb.group({
     source: ['', Validators.required],
     target: ['', Validators.required],
+    discipline: ['', Validators.required],
     product: ['', Validators.required],
   });
 
@@ -77,7 +82,7 @@ export class RandomDataComponent implements OnInit {
             value.product as ProductComponents,
             value.source,
             value.target,
-            Disciplines.web
+            value.discipline
           ).changes;
 
           this.isLoading = false;
@@ -93,13 +98,10 @@ export class RandomDataComponent implements OnInit {
   }
 
   private validateCalver(source: string, target: string): boolean {
-    const sourceTemp = source.split('.');
-    const targetTemp = target.split('.');
-
     return (
       source.length >= 7 &&
       target.length >= 7 &&
-      +targetTemp[1] > +sourceTemp[1]
+      new Date(target) > new Date(source)
     );
   }
 }

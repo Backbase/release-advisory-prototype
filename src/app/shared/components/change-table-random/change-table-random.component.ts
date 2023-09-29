@@ -2,7 +2,7 @@ import { Component, Input, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
-import { AdvisoryDetails, ChangeTitle } from '../../models/static.model';
+import { ChangeTitleRandom } from '../../models/static.model';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -28,7 +28,7 @@ import { AdvisoryChanges, Changes } from '../../models/generated.model';
 export class ChangeTableRandomComponent {
   @Input() dataSource: MatTableDataSource<Changes> =
     new MatTableDataSource<Changes>();
-  @Input() displayedColumns: ChangeTitle[] = [];
+  @Input() displayedColumns: ChangeTitleRandom[] = [];
 
   @ViewChild('paginator') paginator!: MatPaginator;
 
@@ -38,17 +38,12 @@ export class ChangeTableRandomComponent {
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
-    console.log(this.dataSource.data);
   }
 
   viewChanges(element: any) {
-    const dialogRef = this.dialog.open(ViewChangeComponent, {
+    this.dialog.open(ViewChangeComponent, {
       data: element,
       width: '50%',
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}`);
     });
   }
 }
