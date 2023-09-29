@@ -8,7 +8,6 @@
         [formControl]="advisoryForm.controls.product"
       >
         <mat-radio-button
-          color="primary"
           *ngFor="let product of productList"
           [value]="product.name"
           [checked]="product.isSelected"
@@ -26,7 +25,6 @@
       >
         <mat-radio-button
           [disabled]="!advisoryForm.controls.product.valid"
-          color="primary"
           *ngFor="let discipline of disciplineList"
           [value]="discipline.name"
           [checked]="discipline.isSelected"
