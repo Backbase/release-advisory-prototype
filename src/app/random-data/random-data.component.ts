@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChangeTitleRandom, Discipline } from '../shared/models/static.model';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import {
   calVerOptions,
   changeTypeHeadingsRandom,
@@ -30,11 +30,12 @@ import { Observable, map, startWith } from 'rxjs';
     CommonModule,
     ChangeTableRandomComponent,
     MatChipsModule,
-    MatSortModule,
     MatProgressSpinnerModule,
     MatRadioModule,
     CalverSelectComponent,
     ReactiveFormsModule,
+    MatSortModule,
+    MatTableModule,
   ],
   templateUrl: './random-data.component.html',
   styleUrls: ['./random-data.component.scss'],
@@ -45,7 +46,7 @@ export class RandomDataComponent implements OnInit {
     (discipline) => discipline.name !== Disciplines.backend
   );
   displayedColumns: ChangeTitleRandom[] = changeTypeHeadingsRandom;
-  dataSource = new MatTableDataSource<Changes>([]);
+  dataSource: MatTableDataSource<Changes> = new MatTableDataSource<Changes>([]);
   isLoading = false;
   readonly options: string[] = calVerOptions;
 
@@ -78,12 +79,16 @@ export class RandomDataComponent implements OnInit {
       if (value.product && this.validateCalver(value.source, value.target)) {
         this.isLoading = true;
         setTimeout(() => {
-          this.dataSource.data = generateChangesData(
+          const generateMockData = generateChangesData(
             value.product as ProductComponents,
             value.source,
             value.target,
             value.discipline
-          ).changes;
+          );
+
+          this.dataSource = new MatTableDataSource<Changes>(
+            generateMockData.changes
+          );
 
           this.isLoading = false;
         }, 1500);
