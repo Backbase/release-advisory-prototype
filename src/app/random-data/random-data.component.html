@@ -62,6 +62,7 @@
     </div>
     <ng-template #loadTable>
       <app-change-table-random
+        *ngIf="advisoryForm.controls.target.valid"
         [dataSource]="dataSource"
         [displayedColumns]="displayedColumns"
       ></app-change-table-random>
