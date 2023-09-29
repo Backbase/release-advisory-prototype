@@ -149,9 +149,6 @@ export function getTitle(
   let bugNames = '';
   if (changeType.name === ChangeTypeName.bugFix || ChangeTypeName.securityFix) {
     // bugNames = getEntryInArray(bugNames[changeType][discipline], 'bugNames');
-    // console.log('bugnames:', bugNames)
-    // console.log('change type:', changeType);
-    // console.log('change type:', discipline);
   }
 
   const titlePrefixes = getPrefixesTitleByChangeType(

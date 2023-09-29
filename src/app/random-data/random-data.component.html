@@ -25,6 +25,7 @@
         [formControl]="advisoryForm.controls.discipline"
       >
         <mat-radio-button
+          [disabled]="!advisoryForm.controls.product.valid"
           color="primary"
           *ngFor="let discipline of disciplineList"
           [value]="discipline.name"
@@ -38,6 +39,7 @@
       <div class="calver-selection">
         <div class="source">
           <app-calver-select
+            [disabled]="!advisoryForm.controls.discipline.valid"
             title="Source version"
             [options]="options"
             [filteredOptions]="filteredOptionsSource | async"
@@ -46,6 +48,7 @@
         </div>
         <div class="target">
           <app-calver-select
+            [disabled]="!advisoryForm.controls.discipline.valid"
             title="Target version"
             [options]="options"
             [filteredOptions]="filteredOptionsTarget | async"

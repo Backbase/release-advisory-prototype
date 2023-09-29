@@ -38,17 +38,12 @@ export class ChangeTableRandomComponent {
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
-    console.log(this.dataSource.data);
   }
 
   viewChanges(element: any) {
-    const dialogRef = this.dialog.open(ViewChangeComponent, {
+    this.dialog.open(ViewChangeComponent, {
       data: element,
       width: '50%',
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}`);
     });
   }
 }

@@ -75,7 +75,6 @@ export class RandomDataComponent implements OnInit {
       );
 
     this.advisoryForm.valueChanges.subscribe((value) => {
-      console.log(value);
       if (value.product && this.validateCalver(value.source, value.target)) {
         this.isLoading = true;
         setTimeout(() => {
@@ -99,13 +98,10 @@ export class RandomDataComponent implements OnInit {
   }
 
   private validateCalver(source: string, target: string): boolean {
-    const sourceTemp = source.split('.');
-    const targetTemp = target.split('.');
-
     return (
       source.length >= 7 &&
       target.length >= 7 &&
-      +targetTemp[1] > +sourceTemp[1]
+      new Date(target) > new Date(source)
     );
   }
 }

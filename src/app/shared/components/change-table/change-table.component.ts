@@ -42,13 +42,9 @@ export class ChangeTableComponent {
   }
 
   viewChanges(element: any) {
-    const dialogRef = this.dialog.open(ViewChangeComponent, {
+    this.dialog.open(ViewChangeComponent, {
       data: element,
       width: '50%',
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}`);
     });
   }
 }
