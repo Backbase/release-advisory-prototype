@@ -21,7 +21,6 @@
   @extend .margin-top-xs;
   display: flex;
   .filters {
-    border: 1px solid var(--border-dark);
     background-color: #fff;
     overflow-y: scroll;
     overflow-x: hidden;
@@ -58,4 +57,9 @@
     width: 100%;
     padding-bottom: 2em;
   }
+}
+
+.calver-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

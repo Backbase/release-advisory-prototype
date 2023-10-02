@@ -1,23 +1,18 @@
 <div class="table-wrapper">
   <div class="filter-wrapper">
     <mat-form-field>
-      <mat-label>Search</mat-label>
-      <input
-        matInput
-        (keyup)="applyFilter($event)"
-        placeholder="Search for data in the table"
-        #input
-      />
-      <!-- <button
+      <mat-label>Search for data in the table</mat-label>
+      <input matInput (keyup)="applyFilter($event)" #searchInput />
+      <button
         type="button"
         matSuffix
-        *ngIf="input?.value"
+        *ngIf="filterText"
         mat-icon-button
         aria-label="Clear"
-        (click)="input.value = ''"
+        (click)="resetSearch(searchInput)"
       >
         <mat-icon>close</mat-icon>
-      </button> -->
+      </button>
     </mat-form-field>
   </div>
 
@@ -31,40 +26,57 @@
   >
     <ng-container matColumnDef="Calver">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Calver</th>
-      <td mat-cell *matCellDef="let element">v{{ element.calVer }}</td>
+      <td
+        mat-cell
+        *matCellDef="let element"
+        [innerHTML]="'v' + element.calVer | highlightSearch : filterText"
+      ></td>
     </ng-container>
 
     <ng-container matColumnDef="Component">
       <th mat-header-cell *matHeaderCellDef>Software Component</th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.component }}
-      </td>
+      <td
+        mat-cell
+        *matCellDef="let element"
+        [innerHTML]="element.component | highlightSearch : filterText"
+      ></td>
     </ng-container>
 
     <ng-container matColumnDef="Version">
       <th mat-header-cell *matHeaderCellDef>Version</th>
-      <td mat-cell *matCellDef="let element">v{{ element.version }}</td>
+      <td
+        mat-cell
+        *matCellDef="let element"
+        [innerHTML]="'v' + element.version | highlightSearch : filterText"
+      ></td>
     </ng-container>
 
     <ng-container matColumnDef="Change">
       <th mat-header-cell *matHeaderCellDef>Change</th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.title }}
-      </td>
+      <td
+        mat-cell
+        *matCellDef="let element"
+        [innerHTML]="element.title | highlightSearch : filterText"
+      ></td>
     </ng-container>
 
     <ng-container matColumnDef="Discipline">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Discipline</th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.discipline }}
-      </td>
+      <td
+        mat-cell
+        *matCellDef="let element"
+        [innerHTML]="element.discipline | highlightSearch : filterText"
+      ></td>
     </ng-container>
 
     <ng-container matColumnDef="Change Type">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Change type</th>
       <td mat-cell *matCellDef="let element">
-        <span class="custom-chip" [class]="element.changeType.color">
-          {{ element.changeType.name }}
+        <span
+          class="custom-chip"
+          [class]="element.changeType.color"
+          [innerHTML]="element.changeType.name | highlightSearch : filterText"
+        >
         </span>
       </td>
     </ng-container>

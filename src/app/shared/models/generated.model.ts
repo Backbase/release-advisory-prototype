@@ -4,7 +4,7 @@ export interface Changes {
   calVer: string;
   component: string;
   product: string;
-  discipline: Discipline;
+  discipline: Discipline | string;
   changeType: ChangeType;
   mitigationLink: string;
   description: string;

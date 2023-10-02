@@ -10,6 +10,7 @@ import { ViewChangeComponent } from '../view-change/view-change.component';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { Changes } from '../../models/generated.model';
 import { MatButtonModule } from '@angular/material/button';
+import { HighlightSearchPipe } from '../../pipes/highlight.pipe';
 
 @Component({
   selector: 'app-change-table-random',
@@ -23,6 +24,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatSortModule,
     MatDialogModule,
     MatButtonModule,
+    HighlightSearchPipe,
   ],
   templateUrl: './change-table-random.component.html',
   styleUrls: ['./change-table-random.component.scss'],
@@ -35,6 +37,8 @@ export class ChangeTableRandomComponent implements AfterViewInit {
   @ViewChild(MatSort, { static: false }) set sort(sort: MatSort) {
     this.dataSource.sort = sort;
   }
+
+  filterText = '';
 
   constructor(public dialog: MatDialog) {}
 
@@ -72,8 +76,10 @@ export class ChangeTableRandomComponent implements AfterViewInit {
   }
 
   applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.filterText = (event.target as HTMLInputElement).value.trim();
+    this.dataSource.filter = this.filterText.trim().toLowerCase();
+    // const filterValue = (event.target as HTMLInputElement).value;
+    // this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   viewChanges(element: any) {
@@ -81,5 +87,12 @@ export class ChangeTableRandomComponent implements AfterViewInit {
       data: element,
       width: '50%',
     });
+  }
+
+  resetSearch(searchInput: HTMLInputElement) {
+    this.filterText = '';
+    searchInput.value = '';
+
+    this.dataSource.filter = '';
   }
 }

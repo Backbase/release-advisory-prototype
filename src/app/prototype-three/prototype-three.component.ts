@@ -16,6 +16,7 @@ import { Changes } from '../shared/models/generated.model';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
 import {
+  ChangeTypeName,
   Disciplines,
   ProductComponents,
 } from '../shared/mocks/release-advisory-mock-generator/constants';
@@ -24,6 +25,7 @@ import { CalverSelectComponent } from '../usecase-two/calver-select/calver-selec
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable, map, startWith } from 'rxjs';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { HighlightSearchPipe } from '../shared/pipes/highlight.pipe';
 
 @Component({
   selector: 'app-random-data',
@@ -39,6 +41,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatSortModule,
     MatTableModule,
     MatSlideToggleModule,
+    HighlightSearchPipe,
   ],
   templateUrl: './prototype-three.component.html',
   styleUrls: ['./prototype-three.component.scss'],
@@ -52,6 +55,7 @@ export class PrototypeThreeComponent implements OnInit {
   dataSource: MatTableDataSource<Changes> = new MatTableDataSource<Changes>([]);
   initDataSource: Changes[] = [];
   isLoading = false;
+  isBackendEnabled = true;
   readonly options: string[] = calVerOptions;
 
   readonly changeTypeList = [...changeType];
@@ -61,6 +65,17 @@ export class PrototypeThreeComponent implements OnInit {
     target: ['', Validators.required],
     discipline: ['', Validators.required],
     product: ['', Validators.required],
+  });
+
+  filterForm = this.fb.group({
+    changeType: this.fb.group({
+      [ChangeTypeName.breakingChange]: [true],
+      [ChangeTypeName.bugFix]: [true],
+      [ChangeTypeName.deprecated]: [true],
+      [ChangeTypeName.feature]: [true],
+      [ChangeTypeName.securityFix]: [true],
+    }),
+    enableBackend: [false, Validators.required],
   });
 
   filteredOptionsSource!: Observable<string[]>;
@@ -82,7 +97,6 @@ export class PrototypeThreeComponent implements OnInit {
       );
 
     this.advisoryForm.valueChanges.subscribe((value) => {
-      console.log(value);
       if (value.product && this.validateCalver(value.source, value.target)) {
         this.isLoading = true;
         setTimeout(() => {
@@ -99,25 +113,39 @@ export class PrototypeThreeComponent implements OnInit {
             generateMockData.changes
           );
 
+          this.resetFilters();
+
           this.isLoading = false;
         }, 1500);
       }
     });
-  }
 
-  filterByChangeType(changeType: ChangeType) {
-    // update changeTypeList with changeType isChecked
-    const index = this.changeTypeList.findIndex(
-      (change) => change.name === changeType.name
-    );
+    this.filterForm.valueChanges.subscribe((value) => {
+      let newDataSource = [...this.initDataSource];
 
-    this.changeTypeList[index].isChecked =
-      !this.changeTypeList[index].isChecked;
+      const keys = Object.keys(this.filterForm.value.changeType);
 
-    this.dataSource.data = this.filterByChangeTypeList();
+      const selectedChangeType = keys.filter(
+        (key) => this.filterForm.value.changeType[key]
+      );
 
-    this.dataSource._updateChangeSubscription();
-    this.dataSource._updatePaginator(this.dataSource.data.length);
+      if (value.enableBackend) {
+        newDataSource = [
+          ...newDataSource.filter((data) => {
+            return data.discipline !== Disciplines.backend;
+          }),
+        ];
+      }
+
+      if (selectedChangeType.length === this.changeTypeList.length)
+        this.dataSource.data = newDataSource;
+
+      this.dataSource.data = newDataSource.filter((datum) =>
+        selectedChangeType.includes(datum.changeType.name)
+      );
+
+      this.updateDataSource();
+    });
   }
 
   private _filter(value: string): string[] {
@@ -134,18 +162,21 @@ export class PrototypeThreeComponent implements OnInit {
     );
   }
 
-  private filterByChangeTypeList() {
-    const dataSource = [...this.initDataSource];
+  private updateDataSource() {
+    this.dataSource._updateChangeSubscription();
+    this.dataSource._updatePaginator(this.dataSource.data.length);
+  }
 
-    const filterChangeTypeList = this.changeTypeList
-      .filter((change) => change.isChecked)
-      .map((change) => change.name);
-
-    if (filterChangeTypeList.length === this.changeTypeList.length)
-      return dataSource;
-
-    return dataSource.filter((datum) => {
-      return filterChangeTypeList.includes(datum.changeType.name);
+  private resetFilters(): void {
+    this.filterForm.patchValue({
+      changeType: {
+        [ChangeTypeName.breakingChange]: true,
+        [ChangeTypeName.bugFix]: true,
+        [ChangeTypeName.deprecated]: true,
+        [ChangeTypeName.feature]: true,
+        [ChangeTypeName.securityFix]: true,
+      },
+      enableBackend: false,
     });
   }
 }

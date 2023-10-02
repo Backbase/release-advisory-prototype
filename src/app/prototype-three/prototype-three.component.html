@@ -32,7 +32,12 @@
         >
       </mat-radio-group>
     </div>
-    <div class="calver-selection-wrapper">
+    <div
+      class="calver-selection-wrapper"
+      [class]="
+        !advisoryForm.controls.discipline.valid ? 'calver-disabled' : null
+      "
+    >
       <h2>Select Calver</h2>
       <div class="calver-selection">
         <div class="source">
@@ -63,13 +68,27 @@
     <div class="details-wrapper" *ngIf="advisoryForm.controls.target.valid">
       <div class="filters">
         <h3>Filter options</h3>
+
+        <div class="option-type">
+          <h4>By Backend</h4>
+          <div class="filter-select">
+            <mat-slide-toggle
+              [formControl]="filterForm.controls.enableBackend"
+              [checked]="filterForm.controls.enableBackend.value"
+              >Hide Backend changes</mat-slide-toggle
+            >
+          </div>
+        </div>
+
         <div class="option-type">
           <h4>Change Type</h4>
           <div class="filter-select">
             <ng-container *ngFor="let changeType of changeTypeList">
               <mat-slide-toggle
                 [checked]="changeType.isChecked"
-                (change)="filterByChangeType(changeType)"
+                [formControl]="
+                  filterForm.controls.changeType.controls[changeType.name]
+                "
                 >{{ changeType.name }}</mat-slide-toggle
               >
             </ng-container>
