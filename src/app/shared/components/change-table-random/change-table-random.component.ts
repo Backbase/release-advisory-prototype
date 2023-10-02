@@ -9,6 +9,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ViewChangeComponent } from '../view-change/view-change.component';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { Changes } from '../../models/generated.model';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-change-table-random',
@@ -21,6 +22,7 @@ import { Changes } from '../../models/generated.model';
     MatPaginatorModule,
     MatSortModule,
     MatDialogModule,
+    MatButtonModule,
   ],
   templateUrl: './change-table-random.component.html',
   styleUrls: ['./change-table-random.component.scss'],

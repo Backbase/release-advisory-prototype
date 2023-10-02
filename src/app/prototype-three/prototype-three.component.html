@@ -56,16 +56,33 @@
       </div>
     </div>
   </div>
-  <div class="release-details">
-    <div class="loader center" *ngIf="isLoading; else loadTable">
-      <mat-spinner></mat-spinner>
-    </div>
-    <ng-template #loadTable>
-      <app-change-table-random
-        *ngIf="advisoryForm.controls.target.valid"
-        [dataSource]="dataSource"
-        [displayedColumns]="displayedColumns"
-      ></app-change-table-random>
-    </ng-template>
+  <div class="loader center" *ngIf="isLoading; else loadTable">
+    <mat-spinner></mat-spinner>
   </div>
+  <ng-template #loadTable>
+    <div class="details-wrapper" *ngIf="advisoryForm.controls.target.valid">
+      <div class="filters">
+        <h3>Filter options</h3>
+        <div class="option-type">
+          <h4>Change Type</h4>
+          <div class="filter-select">
+            <ng-container *ngFor="let changeType of changeTypeList">
+              <mat-slide-toggle
+                [checked]="changeType.isChecked"
+                (change)="filterByChangeType(changeType)"
+                >{{ changeType.name }}</mat-slide-toggle
+              >
+            </ng-container>
+          </div>
+        </div>
+      </div>
+      <div class="release-details">
+        <app-change-table-random
+          *ngIf="advisoryForm.controls.target.valid"
+          [dataSource]="dataSource"
+          [displayedColumns]="displayedColumns"
+        ></app-change-table-random>
+      </div>
+    </div>
+  </ng-template>
 </div>

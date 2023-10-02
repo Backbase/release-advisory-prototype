@@ -23,8 +23,8 @@ export const APP_ROUTES: Routes = [
   {
     path: 'prototype-three',
     loadComponent: () =>
-      import('./random-data/random-data.component').then(
-        (m) => m.RandomDataComponent
+      import('./prototype-three/prototype-three.component').then(
+        (m) => m.PrototypeThreeComponent
       ),
   },
   {

@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ChangeTitleRandom, Discipline } from '../shared/models/static.model';
+import { ChangeTitleRandom, ChangeType } from '../shared/models/static.model';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import {
   calVerOptions,
   changeTypeHeadingsRandom,
   productList,
   disciplines,
+  changeType,
 } from '../shared/mocks/static.mock';
 import { MatChipsModule } from '@angular/material/chips';
 import { ChangeTableRandomComponent } from '../shared/components/change-table-random/change-table-random.component';
@@ -22,6 +23,7 @@ import { generateChangesData } from '../shared/mocks/release-advisory-mock-gener
 import { CalverSelectComponent } from '../usecase-two/calver-select/calver-select.component';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable, map, startWith } from 'rxjs';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-random-data',
@@ -36,19 +38,23 @@ import { Observable, map, startWith } from 'rxjs';
     ReactiveFormsModule,
     MatSortModule,
     MatTableModule,
+    MatSlideToggleModule,
   ],
-  templateUrl: './random-data.component.html',
-  styleUrls: ['./random-data.component.scss'],
+  templateUrl: './prototype-three.component.html',
+  styleUrls: ['./prototype-three.component.scss'],
 })
-export class RandomDataComponent implements OnInit {
+export class PrototypeThreeComponent implements OnInit {
   public productList = productList;
   disciplineList = disciplines.filter(
     (discipline) => discipline.name !== Disciplines.backend
   );
   displayedColumns: ChangeTitleRandom[] = changeTypeHeadingsRandom;
   dataSource: MatTableDataSource<Changes> = new MatTableDataSource<Changes>([]);
+  initDataSource: Changes[] = [];
   isLoading = false;
   readonly options: string[] = calVerOptions;
+
+  readonly changeTypeList = [...changeType];
 
   advisoryForm = this.fb.group({
     source: ['', Validators.required],
@@ -76,6 +82,7 @@ export class RandomDataComponent implements OnInit {
       );
 
     this.advisoryForm.valueChanges.subscribe((value) => {
+      console.log(value);
       if (value.product && this.validateCalver(value.source, value.target)) {
         this.isLoading = true;
         setTimeout(() => {
@@ -86,6 +93,8 @@ export class RandomDataComponent implements OnInit {
             value.discipline
           );
 
+          this.initDataSource = [...generateMockData.changes];
+
           this.dataSource = new MatTableDataSource<Changes>(
             generateMockData.changes
           );
@@ -94,6 +103,21 @@ export class RandomDataComponent implements OnInit {
         }, 1500);
       }
     });
+  }
+
+  filterByChangeType(changeType: ChangeType) {
+    // update changeTypeList with changeType isChecked
+    const index = this.changeTypeList.findIndex(
+      (change) => change.name === changeType.name
+    );
+
+    this.changeTypeList[index].isChecked =
+      !this.changeTypeList[index].isChecked;
+
+    this.dataSource.data = this.filterByChangeTypeList();
+
+    this.dataSource._updateChangeSubscription();
+    this.dataSource._updatePaginator(this.dataSource.data.length);
   }
 
   private _filter(value: string): string[] {
@@ -108,5 +132,20 @@ export class RandomDataComponent implements OnInit {
       target.length >= 7 &&
       new Date(target) > new Date(source)
     );
+  }
+
+  private filterByChangeTypeList() {
+    const dataSource = [...this.initDataSource];
+
+    const filterChangeTypeList = this.changeTypeList
+      .filter((change) => change.isChecked)
+      .map((change) => change.name);
+
+    if (filterChangeTypeList.length === this.changeTypeList.length)
+      return dataSource;
+
+    return dataSource.filter((datum) => {
+      return filterChangeTypeList.includes(datum.changeType.name);
+    });
   }
 }
