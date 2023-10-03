@@ -41,8 +41,8 @@
     >
       <ng-container
         *ngIf="
-          advisoryForm.controls.discipline.valid &&
-          advisoryForm.controls.product.valid
+          advisoryForm.controls.product.valid &&
+          advisoryForm.controls.discipline.controls.Backend.value
         "
       >
         <h2>Select Calver</h2>
@@ -73,7 +73,13 @@
     <mat-spinner></mat-spinner>
   </div>
   <ng-template #loadTable>
-    <div class="details-wrapper" *ngIf="advisoryForm.controls.target.valid">
+    <div
+      class="details-wrapper"
+      *ngIf="
+        advisoryForm.controls.target.valid &&
+        advisoryForm.controls.discipline.controls.Backend.value
+      "
+    >
       <div class="filters">
         <h3>Filter options</h3>
 

@@ -111,7 +111,11 @@ export class PrototypeThreeComponent implements OnInit {
       );
 
     this.advisoryForm.valueChanges.subscribe((value) => {
-      if (value.product && this.validateCalver(value.source, value.target)) {
+      if (
+        value.product &&
+        this.validateCalver(value.source, value.target) &&
+        this.advisoryForm.valid
+      ) {
         this.isLoading = true;
         setTimeout(() => {
           this.initMockData(value);
