@@ -48,9 +48,10 @@ import { HighlightSearchPipe } from '../shared/pipes/highlight.pipe';
 })
 export class PrototypeThreeComponent implements OnInit {
   public productList = productList;
-  disciplineList = disciplines.filter(
-    (discipline) => discipline.name !== Disciplines.backend
-  );
+  // disciplineList = disciplines.filter(
+  //   (discipline) => discipline.name !== Disciplines.backend
+  // );
+  disciplineList = disciplines;
   displayedColumns: ChangeTitleRandom[] = changeTypeHeadingsRandom;
   dataSource: MatTableDataSource<Changes> = new MatTableDataSource<Changes>([]);
   initDataSource: Changes[] = [];
@@ -60,10 +61,22 @@ export class PrototypeThreeComponent implements OnInit {
 
   readonly changeTypeList = [...changeType];
 
+  readonly disciplineForm = {
+    [Disciplines.android]: [false],
+    [Disciplines.backend]: [true],
+    [Disciplines.ios]: [false],
+    [Disciplines.web]: [false],
+  };
+
   advisoryForm = this.fb.group({
     source: ['', Validators.required],
     target: ['', Validators.required],
-    discipline: ['', Validators.required],
+    discipline: this.fb.group({
+      [Disciplines.android]: [false],
+      [Disciplines.backend]: [true, Validators.requiredTrue],
+      [Disciplines.ios]: [false],
+      [Disciplines.web]: [false],
+    }),
     product: ['', Validators.required],
   });
 
@@ -76,6 +89,7 @@ export class PrototypeThreeComponent implements OnInit {
       [ChangeTypeName.securityFix]: [true],
     }),
     enableBackend: [false, Validators.required],
+    discipline: this.fb.group(this.disciplineForm),
   });
 
   filteredOptionsSource!: Observable<string[]>;
@@ -100,21 +114,8 @@ export class PrototypeThreeComponent implements OnInit {
       if (value.product && this.validateCalver(value.source, value.target)) {
         this.isLoading = true;
         setTimeout(() => {
-          const generateMockData = generateChangesData(
-            value.product as ProductComponents,
-            value.source,
-            value.target,
-            value.discipline
-          );
-
-          this.initDataSource = [...generateMockData.changes];
-
-          this.dataSource = new MatTableDataSource<Changes>(
-            generateMockData.changes
-          );
-
+          this.initMockData(value);
           this.resetFilters();
-
           this.isLoading = false;
         }, 1500);
       }
@@ -129,6 +130,12 @@ export class PrototypeThreeComponent implements OnInit {
         (key) => this.filterForm.value.changeType[key]
       );
 
+      const selectedDisciplines = Object.keys(value.discipline).filter(
+        (key) => value.discipline[key]
+      );
+
+      selectedChangeType.push(Disciplines.backend);
+
       if (value.enableBackend) {
         newDataSource = [
           ...newDataSource.filter((data) => {
@@ -140,9 +147,12 @@ export class PrototypeThreeComponent implements OnInit {
       if (selectedChangeType.length === this.changeTypeList.length)
         this.dataSource.data = newDataSource;
 
-      this.dataSource.data = newDataSource.filter((datum) =>
-        selectedChangeType.includes(datum.changeType.name)
-      );
+      this.dataSource.data = newDataSource.filter((datum) => {
+        return (
+          selectedChangeType.includes(datum.changeType.name) &&
+          selectedDisciplines.includes(datum.discipline as string)
+        );
+      });
 
       this.updateDataSource();
     });
@@ -177,6 +187,28 @@ export class PrototypeThreeComponent implements OnInit {
         [ChangeTypeName.securityFix]: true,
       },
       enableBackend: false,
+      discipline: {
+        [Disciplines.android]: true,
+        [Disciplines.ios]: true,
+        [Disciplines.web]: true,
+      },
     });
+  }
+
+  private initMockData(value): void {
+    const selectedDisciplines = Object.keys(value.discipline).filter(
+      (key) => value.discipline[key]
+    );
+
+    const generatedData = generateChangesData(
+      value.product as ProductComponents,
+      value.source,
+      value.target,
+      selectedDisciplines
+    );
+
+    this.initDataSource = [...generatedData.changes];
+
+    this.dataSource = new MatTableDataSource<Changes>(generatedData.changes);
   }
 }
