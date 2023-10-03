@@ -99,7 +99,9 @@
           <div class="filter-select">
             <ng-container *ngFor="let changeType of changeTypeList">
               <mat-slide-toggle
-                [checked]="changeType.isChecked"
+                [checked]="
+                  filterForm.controls.changeType.controls[changeType.name].value
+                "
                 [formControl]="
                   filterForm.controls.changeType.controls[changeType.name]
                 "
@@ -113,12 +115,14 @@
           <div class="filter-select">
             <ng-container *ngFor="let discipline of disciplineList">
               <mat-slide-toggle
-                [checked]="discipline.isSelected"
+                [checked]="
+                  filterForm.controls.discipline.controls[discipline.name].value
+                "
                 [formControl]="
                   filterForm.controls.discipline.controls[discipline.name]
                 "
-                >{{ discipline.name }}</mat-slide-toggle
-              >
+                >{{ discipline.name }}
+              </mat-slide-toggle>
             </ng-container>
           </div>
         </div>

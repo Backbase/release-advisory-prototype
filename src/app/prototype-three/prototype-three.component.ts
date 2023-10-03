@@ -47,26 +47,22 @@ import { HighlightSearchPipe } from '../shared/pipes/highlight.pipe';
   styleUrls: ['./prototype-three.component.scss'],
 })
 export class PrototypeThreeComponent implements OnInit {
-  public productList = productList;
-  // disciplineList = disciplines.filter(
-  //   (discipline) => discipline.name !== Disciplines.backend
-  // );
-  disciplineList = disciplines;
-  displayedColumns: ChangeTitleRandom[] = changeTypeHeadingsRandom;
-  dataSource: MatTableDataSource<Changes> = new MatTableDataSource<Changes>([]);
-  initDataSource: Changes[] = [];
-  isLoading = false;
-  isBackendEnabled = true;
+  readonly productList = productList;
+  readonly disciplineList = disciplines;
+  readonly displayedColumns: ChangeTitleRandom[] = changeTypeHeadingsRandom;
   readonly options: string[] = calVerOptions;
-
   readonly changeTypeList = [...changeType];
-
   readonly disciplineForm = {
     [Disciplines.android]: [false],
     [Disciplines.backend]: [true],
     [Disciplines.ios]: [false],
     [Disciplines.web]: [false],
   };
+
+  dataSource: MatTableDataSource<Changes> = new MatTableDataSource<Changes>([]);
+  initDataSource: Changes[] = [];
+  isLoading = false;
+  isBackendEnabled = true;
 
   advisoryForm = this.fb.group({
     source: ['', Validators.required],
@@ -119,7 +115,6 @@ export class PrototypeThreeComponent implements OnInit {
         this.isLoading = true;
         setTimeout(() => {
           this.initMockData(value);
-          this.resetFilters();
           this.isLoading = false;
         }, 1500);
       }
@@ -181,28 +176,17 @@ export class PrototypeThreeComponent implements OnInit {
     this.dataSource._updatePaginator(this.dataSource.data.length);
   }
 
-  private resetFilters(): void {
-    this.filterForm.patchValue({
-      changeType: {
-        [ChangeTypeName.breakingChange]: true,
-        [ChangeTypeName.bugFix]: true,
-        [ChangeTypeName.deprecated]: true,
-        [ChangeTypeName.feature]: true,
-        [ChangeTypeName.securityFix]: true,
-      },
-      enableBackend: false,
-      discipline: {
-        [Disciplines.android]: true,
-        [Disciplines.ios]: true,
-        [Disciplines.web]: true,
-      },
-    });
-  }
-
   private initMockData(value): void {
     const selectedDisciplines = Object.keys(value.discipline).filter(
       (key) => value.discipline[key]
     );
+
+    this.disciplineList.forEach((discipline) => {
+      discipline.isSelected = selectedDisciplines.includes(discipline.name);
+      this.filterForm.controls?.discipline?.controls[discipline.name].setValue(
+        discipline.isSelected
+      );
+    });
 
     const generatedData = generateChangesData(
       value.product as ProductComponents,
