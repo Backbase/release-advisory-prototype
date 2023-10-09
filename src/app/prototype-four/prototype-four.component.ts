@@ -231,6 +231,8 @@ export class PrototypeFourComponent implements OnInit {
       );
     });
 
+    generatedData.sort((a, b) => a.calVer.localeCompare(b.calVer));
+
     this.initDataSource = [...generatedData];
 
     console.log(this.initDataSource);
