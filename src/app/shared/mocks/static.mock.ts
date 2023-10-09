@@ -30,7 +30,7 @@ export const calVerOptions: string[] = [
 
 export const disciplines: Discipline[] = [
   { name: Disciplines.web, isSelected: false },
-  { name: Disciplines.backend, isSelected: false },
+  { name: Disciplines.backend, isSelected: true },
   { name: Disciplines.ios, isSelected: false },
   { name: Disciplines.android, isSelected: false },
 ];
@@ -103,6 +103,7 @@ export const changeTypeHeadings: ChangeTitle[] = [
 
 export const changeTypeHeadingsRandom: ChangeTitleRandom[] = [
   'Calver',
+  'Product',
   'Component',
   'Version',
   'Discipline',
@@ -114,7 +115,7 @@ export const changeTypeHeadingsRandom: ChangeTitleRandom[] = [
 export const productList: ProductComponent[] = [
   {
     name: ProductComponents.retailBankingUSA,
-    isSelected: false,
+    isSelected: true,
   },
   {
     name: ProductComponents.retailBankingUniversal,

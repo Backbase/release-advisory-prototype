@@ -58,7 +58,7 @@ export const softwareComponentSuffixes = {
 };
 
 export const softwareComponentsByProduct = {
-  'Retail Banking USA': [
+  [ProductComponents.retailBankingUSA]: [
     { software: 'account-statements', product: 'Accounts & Statements' },
     { software: 'accounts-transactions', product: 'Accounts & Transactions' },
     { software: 'app-foundation', product: 'App Foundation' },
@@ -85,7 +85,7 @@ export const softwareComponentsByProduct = {
     { software: 'user-self-enrollment', product: 'User Self Enrollment' },
     { software: 'user-self-service', product: 'User Self Service' },
   ],
-  'Retail Banking Universal': [
+  [ProductComponents.retailBankingUniversal]: [
     { software: 'account-statements', product: 'Accounts & Statements' },
     { software: 'accounts-transactions', product: 'Accounts & Transactions' },
     { software: 'app-foundation', product: 'App Foundation' },
@@ -112,7 +112,7 @@ export const softwareComponentsByProduct = {
     { software: 'user-self-enrollment', product: 'User Self Enrollment' },
     { software: 'user-self-service', product: 'User Self Service' },
   ],
-  'Business Banking USA': [
+  [ProductComponents.businessBankingUSA]: [
     { software: 'account-statements', product: 'Accounts & Statements' },
     { software: 'accounts-transactions', product: 'Accounts & Transactions' },
     { software: 'app-foundation', product: 'App Foundation' },
@@ -136,7 +136,7 @@ export const softwareComponentsByProduct = {
     { software: 'user-self-enrollment', product: 'User Self Enrollment' },
     { software: 'user-self-service', product: 'User Self Service' },
   ],
-  'Business Banking Universal': [
+  [ProductComponents.businessBankingUniversal]: [
     { software: 'account-statements', product: 'Accounts & Statements' },
     { software: 'accounts-transactions', product: 'Accounts & Transactions' },
     { software: 'app-foundation', product: 'App Foundation' },
@@ -160,7 +160,7 @@ export const softwareComponentsByProduct = {
     { software: 'user-self-enrollment', product: 'User Self Enrollment' },
     { software: 'user-self-service', product: 'User Self Service' },
   ],
-  'Wealth Management': [
+  [ProductComponents.wealthManagement]: [
     { software: 'authentication', product: 'Authentication' },
     { software: 'messages', product: 'Messages' },
     { software: 'notifications', product: 'Notifications' },
@@ -170,7 +170,7 @@ export const softwareComponentsByProduct = {
     { software: 'statements', product: 'Statements' },
     { software: 'trading', product: 'Trading' },
   ],
-  'Digital Assist': [
+  [ProductComponents.digitalAssist]: [
     { software: 'activity-log', product: 'Activity Log' },
     { software: 'assist-messaging', product: 'Assist Messaging' },
     {
@@ -209,7 +209,7 @@ export const softwareComponentsByProduct = {
     { software: 'user-sessions', product: 'User Sessions' },
     { software: 'voice-call', product: 'Voice Call' },
   ],
-  'Digital Engage': [
+  [ProductComponents.digitalEngage]: [
     { software: 'analyze-engagements', product: 'Analyze Engagements' },
     { software: 'approvals', product: 'Approvals' },
     { software: 'create-audience', product: 'Create Audience' },

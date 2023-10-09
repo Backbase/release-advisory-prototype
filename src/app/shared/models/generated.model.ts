@@ -1,9 +1,9 @@
-import { ChangeType, Discipline } from './static.model';
+import { ChangeType, Discipline, ProductComponent } from './static.model';
 
 export interface Changes {
   calVer: string;
   component: string;
-  product: string;
+  product: ProductComponent | string;
   discipline: Discipline | string;
   changeType: ChangeType;
   mitigationLink: string;

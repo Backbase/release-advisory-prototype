@@ -33,6 +33,15 @@
       ></td>
     </ng-container>
 
+    <ng-container matColumnDef="Product">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Product</th>
+      <td
+        mat-cell
+        *matCellDef="let element"
+        [innerHTML]="element.product | highlightSearch : filterText"
+      ></td>
+    </ng-container>
+
     <ng-container matColumnDef="Component">
       <th mat-header-cell *matHeaderCellDef>Software Component</th>
       <td

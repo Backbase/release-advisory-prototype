@@ -28,6 +28,13 @@ export const APP_ROUTES: Routes = [
       ),
   },
   {
+    path: 'prototype-4',
+    loadComponent: () =>
+      import('./prototype-four/prototype-four.component').then(
+        (m) => m.PrototypeFourComponent
+      ),
+  },
+  {
     path: '**',
     redirectTo: 'prototype-one',
   },

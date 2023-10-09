@@ -26,6 +26,7 @@ import {
 
 import {
   ChangeTypeName,
+  Disciplines,
   changeTypesOptions,
   softwareComponentSuffixes,
   softwareComponentsByProduct,
@@ -43,11 +44,13 @@ export function generateChangesData(
   };
   const versionsByComponent = {};
   const disciplines = ['Backend'];
+
   if (!Array.isArray(frontend)) {
     disciplines.push(frontend);
   } else {
     disciplines.push(...frontend);
   }
+
   const parseableTargetVersion = getParseableCalVer(calVerTargetVersion);
   const parseableSourceVersion = getParseableCalVer(calVerSourceVersion);
 
@@ -81,7 +84,10 @@ export function generateChangesData(
       change.changeType.name === ChangeTypeName.deprecated
     ) {
       let urlPortion = change.discipline + '-devkit';
-      if (change.discipline === 'iOS' || change.discipline === 'Android') {
+      if (
+        change.discipline === Disciplines.ios ||
+        change.discipline === Disciplines.android
+      ) {
         urlPortion = 'mobile-devkit';
       }
       change.mitigationLink =
@@ -92,6 +98,7 @@ export function generateChangesData(
     );
 
     const componentSuffix = softwareComponentSuffixes[change.discipline];
+
     const component = getEntryInArray(
       softwareComponentsByProduct[product],
       'componentsByProduct'
