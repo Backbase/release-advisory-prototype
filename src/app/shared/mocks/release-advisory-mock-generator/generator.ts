@@ -114,7 +114,7 @@ export function generateChangesData(
           change['version'] = semver.inc(storedVersion, 'major');
           break;
         case ChangeTypeName.deprecated:
-        case ChangeTypeName.enhancement:
+        case ChangeTypeName.updated:
           change['version'] = semver.inc(
             storedVersion,
             minorOrPatch[Math.floor(Math.random() * minorOrPatch.length)]

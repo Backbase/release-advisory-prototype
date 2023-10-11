@@ -4,7 +4,7 @@ export enum ChangeTypeName {
   breakingChange = 'Breaking Change',
   deprecated = 'Deprecation',
   securityFix = 'Security Fix',
-  enhancement = 'Enhancement',
+  updated = 'Updated',
 }
 
 export enum Disciplines {
@@ -20,7 +20,7 @@ export const changeTypesOptions: ChangeTypeName[] = [
   ChangeTypeName.bugFix,
   ChangeTypeName.securityFix,
   ChangeTypeName.feature,
-  ChangeTypeName.enhancement,
+  ChangeTypeName.updated,
 ];
 
 export enum ProductComponents {
@@ -465,7 +465,7 @@ export const getPrefixesTitleByChangeType = (
         version +
         ': New Features Await',
     ],
-    [ChangeTypeName.enhancement]: [
+    [ChangeTypeName.updated]: [
       'Elevating Your Experience: New Enhancements Unveiled',
       'Empowering Your Workflow: Exciting Enhancements Released',
       'Enhancing ' +
