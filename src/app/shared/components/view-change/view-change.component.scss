@@ -1,22 +1,38 @@
+.title-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  mat-icon {
+    padding: 1em;
+    cursor: pointer;
+  }
+
+  h1 {
+    margin: 0;
+  }
+}
+
 .release-details-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 5rem;
 }
 
 .release-data-label {
-    font-weight: 500;
-    padding-right: 0.5rem;
+  color: var(--font-title-color);
+  font-weight: 500;
+  padding-right: 0.5rem;
 }
 
-.margin-bottom-sm{
-    margin-bottom: 1.5rem;
+.margin-bottom-sm {
+  margin-bottom: 1.5rem;
 }
 
-.margin-top-xs{
-    margin-top: 0.5rem;
+.margin-top-xs {
+  margin-top: 0.5rem;
 }
 
 .padding-top-xs {
-    padding-top: 0.5rem;
+  padding-top: 0.5rem;
 }

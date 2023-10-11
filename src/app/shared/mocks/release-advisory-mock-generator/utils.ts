@@ -33,7 +33,7 @@ export function getRandomVersionByChangeType(changeType: ChangeType) {
     case ChangeTypeName.breakingChange:
       return generateRandomSemver('major');
     case ChangeTypeName.deprecated:
-    case ChangeTypeName.enhancement:
+    case ChangeTypeName.updated:
       return generateRandomSemver(
         minorOrPatch[Math.floor(Math.random() * minorOrPatch.length)]
       );
@@ -132,7 +132,9 @@ function generateChangeColor(changeType: ChangeTypeName) {
     case ChangeTypeName.bugFix:
       return 'bugfix';
     case ChangeTypeName.securityFix:
-      return 'primary';
+      return 'bugfix';
+    case ChangeTypeName.feature:
+      return 'green-color';
     default:
       return 'primary';
   }

@@ -56,6 +56,9 @@ export class ChangeTableRandomComponent implements AfterViewInit {
       return items.sort((a: any, b: any) => {
         let comparatorResult = 0;
         switch (sort.active) {
+          case 'Product':
+            comparatorResult = a.product.localeCompare(b.product);
+            break;
           case 'Discipline':
             comparatorResult = a.discipline.localeCompare(b.discipline);
             break;

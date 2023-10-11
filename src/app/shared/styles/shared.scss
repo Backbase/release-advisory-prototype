@@ -1,23 +1,28 @@
 .custom-chip {
-    height: 40px;
-    padding: 0.5em 0.7em;
-    border-radius: 20px;
-  }
-  
-  .primary {
-    background-color: var(--primary-color);
-    color: #fff;
-  }
-  
-  .accent {
-    background-color: var(--accent-color);
-  }
-  
-  .warn {
-    background-color: var(--warn-color);
-    color: #fff;
-  }
-  
-  .bugfix {
-    background-color: var(--bugfix-color);
-  }
+  height: 40px;
+  padding: 0.5em 0.7em;
+  border-radius: 20px;
+}
+
+.primary {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+
+.accent {
+  background-color: var(--accent-color);
+}
+
+.warn {
+  background-color: var(--warn-color);
+  color: #fff;
+}
+
+.bugfix {
+  background-color: var(--bugfix-color);
+}
+
+.green-color {
+  background-color: var(--green-color);
+  color: #fff;
+}

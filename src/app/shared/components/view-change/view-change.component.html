@@ -1,14 +1,22 @@
-<h1 mat-dialog-title>Details</h1>
+<div class="title-wrapper">
+  <h1 mat-dialog-title>Details</h1>
+  <mat-icon
+    color="warn"
+    aria-hidden="false"
+    aria-label="close icon"
+    fontIcon="close"
+    mat-dialog-close
+  ></mat-icon>
+</div>
 <div mat-dialog-content class="padding-top-xs">
-
   <div class="margin-bottom-sm">
     <span class="release-data-label">Change Type</span>
     <span
-    class="custom-chip"
-    [class]="data.changeType.color"
-    [innerHTML]="data.changeType.name"
-  >
-  </span>
+      class="custom-chip"
+      [class]="data.changeType.color"
+      [innerHTML]="data.changeType.name"
+    >
+    </span>
   </div>
 
   <div class="release-details-row margin-bottom-sm">
@@ -48,14 +56,27 @@
   </div>
 
   <div class="margin-bottom-sm">
-    <div class="release-data-label"> Description </div>
+    <div class="release-data-label">Description</div>
     <div class="margin-top-xs">
-      {{ data.description }} 
+      {{ data.description }}
     </div>
   </div>
 </div>
 <div mat-dialog-actions align="end">
-  <button mat-flat-button color="primary" (click)="getReleaseDetails('previous')" [disabled]="isFirstElement"> << Previous</button>
-  <button mat-flat-button color="primary" (click)="getReleaseDetails('next')" [disabled]="isLastElement">Next >></button>
-  <button mat-flat-button color="primary" mat-dialog-close>Close</button>
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="getReleaseDetails('previous')"
+    [disabled]="isFirstElement"
+  >
+    << Previous
+  </button>
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="getReleaseDetails('next')"
+    [disabled]="isLastElement"
+  >
+    Next >>
+  </button>
 </div>
