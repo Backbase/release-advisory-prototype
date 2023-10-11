@@ -41,9 +41,9 @@ export class ChangeTableComponent {
     this.dataSource.paginator = this.paginator;
   }
 
-  viewChanges(element: any) {
+  viewChanges(elementId: number) {
     this.dialog.open(ViewChangeComponent, {
-      data: element,
+      data: {dataSource: this.dataSource.data, id: elementId},
       width: '50%',
     });
   }

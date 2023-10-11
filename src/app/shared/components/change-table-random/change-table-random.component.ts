@@ -85,9 +85,9 @@ export class ChangeTableRandomComponent implements AfterViewInit {
     // this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  viewChanges(element: any) {
+  viewChanges(elementId: number) {
     this.dialog.open(ViewChangeComponent, {
-      data: element,
+      data: {dataSource: this.dataSource.data, id: elementId},
       width: '50%',
     });
   }

@@ -1,18 +1,74 @@
-<h1 mat-dialog-title>
-  <ng-container *ngIf="data['title']; else oldTitle">
-    {{ data['title'] }}
-  </ng-container>
-  <ng-template #oldTitle>
-    [{{ data.changeType.name }}]: {{ data.change }}
-  </ng-template>
-</h1>
-<div mat-dialog-content>
-  <ng-container *ngIf="data['description']; else oldInformation">
-    {{ data['description'] }}
-  </ng-container>
+<h1 mat-dialog-title>Details</h1>
+<div mat-dialog-content class="padding-top-xs">
+  <div class="margin-bottom-sm">
+    <span class="release-data-label">Change Type</span>
+    <span
+      class="custom-chip"
+      [class]="data.changeType.color"
+      [innerHTML]="data.changeType.name"
+    >
+    </span>
+  </div>
 
-  <ng-template #oldInformation>{{ data | json }}</ng-template>
+  <div class="release-details-row margin-bottom-sm">
+    <div>
+      <span class="release-data-label">Product</span>
+      <span> {{ data.product }} </span>
+    </div>
+
+    <div>
+      <span class="release-data-label"> Calver </span>
+      <span> {{ data.calVer }} </span>
+    </div>
+  </div>
+
+  <div class="margin-bottom-sm">
+    <span class="release-data-label"> Discipline</span>
+    <span> {{ data.discipline }} </span>
+  </div>
+
+  <div class="release-details-row margin-bottom-sm">
+    <div>
+      <span class="release-data-label"> Software Component </span>
+      <span> {{ data.component }} </span>
+    </div>
+
+    <div>
+      <span class="release-data-label"> Software Version </span>
+      <span>
+        {{ data.version }}
+      </span>
+    </div>
+  </div>
+
+  <div class="margin-bottom-sm">
+    <span class="release-data-label"> Title</span>
+    <span> {{ data.title }} </span>
+  </div>
+
+  <div class="margin-bottom-sm">
+    <div class="release-data-label">Description</div>
+    <div class="margin-top-xs">
+      {{ data.description }}
+    </div>
+  </div>
 </div>
 <div mat-dialog-actions align="end">
-  <button mat-flat-button color="primary" mat-dialog-close>Close</button>
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="getReleaseDetails('previous')"
+    [disabled]="isFirstElement"
+  >
+    << Previous
+  </button>
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="getReleaseDetails('next')"
+    [disabled]="isLastElement"
+  >
+    Next >>
+  </button>
+  <button mat-stroked-button mat-dialog-close>Close</button>
 </div>
