@@ -43,13 +43,16 @@ export interface ProductComponent {
 
 export interface ReleaseChanges {
   change: string;
-  discipline: Discipline;
-  calver: string;
-  product: ProductComponent;
+  discipline: string;
+  product: string;
   journey: ProductComponent;
-  component: ProductComponent;
+  component: string;
   version: string;
   changeType: ChangeType;
+  title?: string
+  description?: string;
+  calVer?: string;
+  id: number;
 }
 
 export type Calver = string;

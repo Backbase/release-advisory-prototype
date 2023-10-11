@@ -74,6 +74,7 @@ export function generateChangesData(
       discipline: getDiscipline(disciplines),
       changeType: getChangeType(changeTypes),
       mitigationLink: '',
+      id: Math.random()
     };
 
     if (

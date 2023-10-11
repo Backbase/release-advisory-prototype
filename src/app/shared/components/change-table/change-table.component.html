@@ -7,31 +7,31 @@
   <ng-container matColumnDef="Discipline">
     <th mat-header-cell *matHeaderCellDef>Discipline</th>
     <td mat-cell *matCellDef="let element">
-      {{ element.discipline.name }}
+      {{ element.discipline }}
     </td>
   </ng-container>
 
   <ng-container matColumnDef="Product">
     <th mat-header-cell *matHeaderCellDef>Product</th>
-    <td mat-cell *matCellDef="let element">{{ element.product.name }}</td>
+    <td mat-cell *matCellDef="let element">{{ element.product }}</td>
   </ng-container>
 
   <ng-container matColumnDef="Calver">
     <th mat-header-cell *matHeaderCellDef>Version</th>
-    <td mat-cell *matCellDef="let element">v{{ element.calver }}</td>
+    <td mat-cell *matCellDef="let element">v{{ element.calVer }}</td>
   </ng-container>
 
   <ng-container matColumnDef="Journey">
     <th mat-header-cell *matHeaderCellDef>Journey</th>
     <td mat-cell *matCellDef="let element">
-      {{ element.journey.name }}
+      {{ element.journey }}
     </td>
   </ng-container>
 
   <ng-container matColumnDef="Component">
     <th mat-header-cell *matHeaderCellDef>Software Component</th>
     <td mat-cell *matCellDef="let element">
-      {{ element.component.name }}
+      {{ element.component }}
     </td>
   </ng-container>
 
@@ -57,7 +57,7 @@
         aria-hidden="false"
         aria-label="visibility"
         fontIcon="visibility"
-        (click)="viewChanges(element)"
+        (click)="viewChanges(element.id)"
       ></mat-icon>
     </td>
   </ng-container>
