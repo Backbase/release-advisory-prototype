@@ -1,3 +1,18 @@
+.title-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  mat-icon {
+    padding: 1em;
+    cursor: pointer;
+  }
+
+  h1 {
+    margin: 0;
+  }
+}
+
 .release-details-row {
   display: flex;
   align-items: flex-start;
