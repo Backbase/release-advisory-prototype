@@ -4,6 +4,11 @@
     <h2>Select Products</h2>
     <div class="product">
       <mat-checkbox
+        [class]="
+          advisoryForm.controls.product.controls[product.name].value
+            ? 'selected-product'
+            : 'not-selected-product'
+        "
         color="primary"
         [formControl]="advisoryForm.controls.product.controls[product.name]"
         *ngFor="let product of productList"
@@ -58,6 +63,18 @@
         <h3>Filter options</h3>
 
         <div class="option-type">
+          <h4>Calver</h4>
+          <div class="filter-select">
+            <app-calver-select
+              title="Target version"
+              [options]="options"
+              [filteredOptions]="filteredOptionsCalVer | async"
+              [calverControl]="filterForm.controls.calVer"
+            ></app-calver-select>
+          </div>
+        </div>
+
+        <div class="option-type">
           <h4>Change Type</h4>
           <div class="filter-select">
             <mat-checkbox
@@ -83,14 +100,18 @@
               *ngFor="let discipline of disciplineList"
               >{{ discipline.name }}</mat-checkbox
             >
-            <!-- <mat-checkbox
+          </div>
+        </div>
+        <div class="option-type">
+          <h4>Products</h4>
+          <div class="filter-select">
+            <mat-checkbox
               color="primary"
-              [formControl]="
-                filterForm.controls.discipline.controls[discipline.name]
-              "
-              *ngFor="let discipline of disciplineList"
-              >{{ discipline.name }}</mat-checkbox
-            > -->
+              [formControl]="filterForm.controls.product.controls[product.name]"
+              [checked]="product.isSelected"
+              *ngFor="let product of productList"
+              >{{ product.name }}</mat-checkbox
+            >
           </div>
         </div>
       </div>

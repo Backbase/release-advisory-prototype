@@ -2,6 +2,7 @@
   <div class="filter-wrapper">
     <mat-form-field>
       <mat-label>Search for data in the table</mat-label>
+      <mat-icon matPrefix class="my-icon">search</mat-icon>
       <input matInput (keyup)="applyFilter($event)" #searchInput />
       <button
         type="button"

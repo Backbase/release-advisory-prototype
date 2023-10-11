@@ -98,13 +98,16 @@ export class PrototypeFourComponent implements OnInit {
   });
 
   filterForm = this.fb.group({
+    calVer: [''],
     changeType: this.fb.group(this.changeTypeForm),
     discipline: this.fb.group(this.disciplineForm),
     enableBackend: [false, Validators.required],
+    product: this.fb.group(this.ProductForm),
   });
 
   filteredOptionsSource!: Observable<string[]>;
   filteredOptionsTarget!: Observable<string[]>;
+  filteredOptionsCalVer!: Observable<string[]>;
 
   constructor(private fb: FormBuilder) {}
 
@@ -117,6 +120,12 @@ export class PrototypeFourComponent implements OnInit {
 
     this.filteredOptionsTarget =
       this.advisoryForm.controls.target.valueChanges.pipe(
+        startWith(''),
+        map((value) => this._filter(value || ''))
+      );
+
+    this.filteredOptionsCalVer =
+      this.filterForm.controls.calVer.valueChanges.pipe(
         startWith(''),
         map((value) => this._filter(value || ''))
       );
@@ -135,42 +144,7 @@ export class PrototypeFourComponent implements OnInit {
       }
     });
 
-    this.filterForm.valueChanges.subscribe((value) => {
-      let newDataSource = [...this.initDataSource];
-
-      const selectedChangeTypeKeys = Object.keys(value.changeType);
-      const selectedDisciplinesKeys = Object.keys(value.discipline);
-
-      const selectedChangeType = selectedChangeTypeKeys.filter(
-        (key) => value.changeType[key]
-      );
-
-      const selectedDisciplines = selectedDisciplinesKeys.filter(
-        (key) => value.discipline[key]
-      );
-
-      // selectedChangeType.push(Disciplines.backend);
-
-      if (value.enableBackend) {
-        newDataSource = [
-          ...newDataSource.filter((data) => {
-            return data.discipline !== Disciplines.backend;
-          }),
-        ];
-      }
-
-      if (selectedChangeType.length === this.changeTypeList.length)
-        this.dataSource.data = newDataSource;
-
-      this.dataSource.data = newDataSource.filter((datum) => {
-        return (
-          selectedChangeType.includes(datum.changeType.name) &&
-          selectedDisciplines.includes(datum.discipline as string)
-        );
-      });
-
-      this.updateDataSource();
-    });
+    this.filterFormChanges();
   }
 
   isProductSelected(): boolean {
@@ -220,6 +194,10 @@ export class PrototypeFourComponent implements OnInit {
       (key) => value.product[key]
     );
 
+    selectedProducts.forEach((product) =>
+      this.filterForm.controls.product.controls[product].patchValue(true)
+    );
+
     selectedProducts.forEach((product) => {
       generatedData.push(
         ...generateChangesData(
@@ -235,8 +213,52 @@ export class PrototypeFourComponent implements OnInit {
 
     this.initDataSource = [...generatedData];
 
-    console.log(this.initDataSource);
-
     this.dataSource = new MatTableDataSource<Changes>(generatedData);
+  }
+
+  private filterFormChanges(): void {
+    this.filterForm.valueChanges.subscribe((value) => {
+      let newDataSource = [...this.initDataSource];
+
+      const selectedChangeTypeKeys = Object.keys(value.changeType);
+      const selectedDisciplinesKeys = Object.keys(value.discipline);
+      const selectedProductKeys = Object.keys(value.product);
+
+      const selectedChangeType = selectedChangeTypeKeys.filter(
+        (key) => value.changeType[key]
+      );
+
+      const selectedDisciplines = selectedDisciplinesKeys.filter(
+        (key) => value.discipline[key]
+      );
+
+      const selectedProducts = selectedProductKeys.filter(
+        (key) => value.product[key]
+      );
+
+      // selectedChangeType.push(Disciplines.backend);
+
+      if (value.enableBackend) {
+        newDataSource = [
+          ...newDataSource.filter((data) => {
+            return data.discipline !== Disciplines.backend;
+          }),
+        ];
+      }
+
+      if (selectedChangeType.length === this.changeTypeList.length)
+        this.dataSource.data = newDataSource;
+
+      this.dataSource.data = newDataSource.filter((datum) => {
+        return (
+          datum.calVer.includes(value.calVer) &&
+          selectedChangeType.includes(datum.changeType.name) &&
+          selectedDisciplines.includes(datum.discipline as string) &&
+          selectedProducts.includes(datum.product as string)
+        );
+      });
+
+      this.updateDataSource();
+    });
   }
 }
