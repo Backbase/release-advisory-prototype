@@ -89,6 +89,7 @@ export class PrototypeFourComponent implements OnInit {
   initDataSource: Changes[] = [];
   isLoading = false;
   isBackendEnabled = true;
+  filteredCalVerOptions = calVerOptions;
 
   advisoryForm = this.fb.group({
     source: ['', Validators.required],
@@ -115,19 +116,19 @@ export class PrototypeFourComponent implements OnInit {
     this.filteredOptionsSource =
       this.advisoryForm.controls.source.valueChanges.pipe(
         startWith(''),
-        map((value) => this._filter(value || ''))
+        map((value) => this._filter(this.options, value || ''))
       );
 
     this.filteredOptionsTarget =
       this.advisoryForm.controls.target.valueChanges.pipe(
         startWith(''),
-        map((value) => this._filter(value || ''))
+        map((value) => this._filter(this.options, value || ''))
       );
 
     this.filteredOptionsCalVer =
       this.filterForm.controls.calVer.valueChanges.pipe(
         startWith(''),
-        map((value) => this._filter(value || ''))
+        map((value) => this._filter(this.filteredCalVerOptions, value || ''))
       );
 
     this.advisoryForm.valueChanges.subscribe((value) => {
@@ -161,10 +162,8 @@ export class PrototypeFourComponent implements OnInit {
     return keys.some((key) => currentValue[key]);
   }
 
-  private _filter(value: string): string[] {
-    return this.options.filter((option) =>
-      option?.toLowerCase().includes(value)
-    );
+  private _filter(options: string[], value: string): string[] {
+    return options.filter((option) => option?.toLowerCase().includes(value));
   }
 
   private validateCalver(source: string, target: string): boolean {
@@ -214,6 +213,16 @@ export class PrototypeFourComponent implements OnInit {
     this.initDataSource = [...generatedData];
 
     this.dataSource = new MatTableDataSource<Changes>(generatedData);
+
+    const calVers = [...calVerOptions];
+
+    const indexOfSource = calVers.indexOf(value.source);
+    const indexOfTarget = calVers.indexOf(value.target);
+
+    this.filteredCalVerOptions = calVers.slice(
+      indexOfSource + 1,
+      indexOfTarget + 1
+    );
   }
 
   private filterFormChanges(): void {

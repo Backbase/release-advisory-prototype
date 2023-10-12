@@ -17,19 +17,6 @@
     </div>
   </div>
   <div class="discipline margin-top-xs" *ngIf="isProductSelected()">
-    <!-- <h2>Select Discipline</h2>
-
-    <div class="discipline discipline-selector">
-      <mat-checkbox
-        color="primary"
-        [formControl]="
-          advisoryForm.controls.discipline.controls[discipline.name]
-        "
-        [checked]="discipline.isSelected"
-        *ngFor="let discipline of disciplineList"
-        >{{ discipline.name }}</mat-checkbox
-      >
-    </div> -->
     <div class="calver-selection-wrapper">
       <ng-container *ngIf="isProductSelected()">
         <h2>Select Calver</h2>
@@ -67,7 +54,7 @@
           <div class="filter-select">
             <app-calver-select
               title="Target version"
-              [options]="options"
+              [options]="filteredCalVerOptions"
               [filteredOptions]="filteredOptionsCalVer | async"
               [calverControl]="filterForm.controls.calVer"
             ></app-calver-select>
