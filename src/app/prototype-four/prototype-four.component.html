@@ -52,12 +52,17 @@
         <div class="option-type">
           <h4>Calver</h4>
           <div class="filter-select">
-            <app-calver-select
-              title="Target version"
-              [options]="filteredCalVerOptions"
-              [filteredOptions]="filteredOptionsCalVer | async"
-              [calverControl]="filterForm.controls.calVer"
-            ></app-calver-select>
+            <mat-form-field>
+              <mat-label>Choose an option</mat-label>
+              <select
+                matNativeControl
+                [formControl]="filterForm.controls.calVer"
+              >
+                <option [value]="option" *ngFor="let option of calVerList">
+                  {{ option }}
+                </option>
+              </select>
+            </mat-form-field>
           </div>
         </div>
 

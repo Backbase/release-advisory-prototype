@@ -32,6 +32,8 @@ import { Observable, map, startWith } from 'rxjs';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { HighlightSearchPipe } from '../shared/pipes/highlight.pipe';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-prototype-four',
@@ -49,6 +51,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatSlideToggleModule,
     HighlightSearchPipe,
     MatCheckboxModule,
+    MatFormFieldModule,
+    MatInputModule,
   ],
   templateUrl: './prototype-four.component.html',
   styleUrls: ['./prototype-four.component.scss'],
@@ -90,6 +94,7 @@ export class PrototypeFourComponent implements OnInit {
   isLoading = false;
   isBackendEnabled = true;
   filteredCalVerOptions = calVerOptions;
+  calVerList = [];
 
   advisoryForm = this.fb.group({
     source: ['', Validators.required],
@@ -231,6 +236,8 @@ export class PrototypeFourComponent implements OnInit {
       indexOfSource + 1,
       indexOfTarget + 1
     );
+
+    this.calVerList = ['', ...this.filteredCalVerOptions];
   }
 
   private filterFormChanges(): void {
@@ -254,8 +261,11 @@ export class PrototypeFourComponent implements OnInit {
       );
 
       this.dataSource.data = newDataSource.filter((datum) => {
+        const calVerOption = !value.calVer
+          ? true
+          : datum.calVer.includes(value.calVer);
         return (
-          datum.calVer.includes(value.calVer) &&
+          calVerOption &&
           selectedChangeType.includes(datum.changeType.name) &&
           selectedDisciplines.includes(datum.discipline as string) &&
           selectedProducts.includes(datum.product as string)
