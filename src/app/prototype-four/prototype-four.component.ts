@@ -214,6 +214,14 @@ export class PrototypeFourComponent implements OnInit {
 
     this.dataSource = new MatTableDataSource<Changes>(generatedData);
 
+    if (
+      this.filterForm.controls.discipline.value[Disciplines.backend] === false
+    ) {
+      this.dataSource.data = generatedData.filter(
+        (datum) => datum.discipline !== Disciplines.backend
+      );
+    }
+
     const calVers = [...calVerOptions];
 
     const indexOfSource = calVers.indexOf(value.source);
@@ -244,19 +252,6 @@ export class PrototypeFourComponent implements OnInit {
       const selectedProducts = selectedProductKeys.filter(
         (key) => value.product[key]
       );
-
-      // selectedChangeType.push(Disciplines.backend);
-
-      if (value.enableBackend) {
-        newDataSource = [
-          ...newDataSource.filter((data) => {
-            return data.discipline !== Disciplines.backend;
-          }),
-        ];
-      }
-
-      if (selectedChangeType.length === this.changeTypeList.length)
-        this.dataSource.data = newDataSource;
 
       this.dataSource.data = newDataSource.filter((datum) => {
         return (
