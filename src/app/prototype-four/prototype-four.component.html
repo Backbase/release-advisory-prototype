@@ -104,10 +104,16 @@
       </div>
       <div class="release-details">
         <app-change-table-random
-          *ngIf="advisoryForm.controls.target.valid"
+          *ngIf="
+            advisoryForm.controls.target.valid && dataSource.data.length > 0
+          "
           [dataSource]="dataSource"
           [displayedColumns]="displayedColumns"
         ></app-change-table-random>
+        <div class="no-result" *ngIf="dataSource.data.length === 0">
+          No results found for specified filter criteria. Try using a different
+          filter criteria or different search keywords.
+        </div>
       </div>
     </div>
   </ng-template>
