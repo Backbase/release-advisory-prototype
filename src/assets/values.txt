@@ -1,0 +1,2088 @@
+meta:
+  globalVersion: "2023.10"
+  # Rnd chart OCI registry. Injected from the infra
+  sharedACR: crbackbasesharedprd874.azurecr.io/charts
+  # Project team chart OCI registry. Injected from the infra
+  projectACR: ""
+  portallessVersion: 1.3.0
+  flowServiceVersion: 0.3.0
+  genericIntegrationVersion: 0.11.6
+  digitalSalesVersion: 2023.09-digital-sales
+applicationDefaults:
+  ### Populated by infra ###
+  applicationNamespace: ""
+  namespace: ""
+  project: ""
+  ##########################
+
+  # Delete an application resources when the application is deleted
+  cascadeDelete: true
+
+  # Sync policy. can be overridden by applications
+  syncPolicy:
+    automated: # automated sync by default retries failed attempts 5 times with following delays between attempts ( 5s, 10s, 20s, 40s, 80s ); retry controlled using `retry` field.
+      prune: true # Specifies if resources should be pruned during auto-syncing ( false by default ).
+      selfHeal: true # Specifies if partial app sync should be executed when resources are changed only in target Kubernetes cluster and no git change detected ( false by default ).
+      allowEmpty: false # Allows deleting all application resources during automatic syncing ( false by default ).
+    syncOptions: # Sync options which modifies sync behavior
+      - FailOnSharedResource=true
+      - ApplyOutOfSyncOnly=false
+      - PrunePropagationPolicy=foreground # Supported policies are background, foreground and orphan.
+      - PruneLast=true # Allow the ability for resource pruning to happen as a final, implicit wave of a sync operation
+    retry:
+      limit: 3 # number of failed sync attempt retries; unlimited number of attempts if less than 0
+      backoff:
+        duration: 1s # the amount to back off. Default unit is seconds, but could also be a duration (e.g. "2m", "1h")
+        factor: 2 # a factor to multiply the base duration after each failed retry
+        maxDuration: 15s # the maximum amount of time allowed for the backoff strategy
+
+tags:
+  # Tags are used to identify Products and Product Lines, so you can create easily create a runtime
+  # for a set of products. Selecting a product in your runtime will deploy the product services but
+  # also all the required shared services, integrations and foundation components.
+  #
+  # Product tags are selected in your runtime <runtime>/apps/values.yaml using the 'selector' DICT.
+  #
+  # All tags should refer to licensable or non-licensable products, as defined by
+  # https://docs.google.com/spreadsheets/d/1zUXmnnZ3c6x6cC7o-9TG-60lG4SuuSOhe5dGpWjlyUc/edit#gid=1572228524
+  # except for tag 'base' which contains infrastructure specific components required for every runtime.
+  #
+  # The tags referring to products should have a descriptive name, without acronyms, matching the name
+  # in the linked document.
+  #
+  # The only technical tags referring to non-licensable products are:
+  #
+  # 'foundation' with:
+  #  - Gateway & Registry
+  #  - Auditing
+  #  - Remote Config
+  #  - Content Management
+  #  - Document Storage
+  #  - Notifications
+  #  - Push Notifications
+  #  - SMS & Email Integrations
+  #
+  # 'platform' which adds only the following functionality not in 'foundation':
+  #  - Identity Service
+  #  - Access Control
+  #
+  # If you want to deploy a single custom service in a runtime with minimal setup,
+  # you only need to select 'base', 'platform'.
+  #
+  # Some Products can be used in different combinations, like web + backend (no mobile),
+  # or mobile + backend (no web). To facilitate these combinations, additional product tags are defined
+  # to be able to deploy this selection using:
+  #    '<product>-web'
+  #    '<product>-mobile'
+  #    '<product>-backend'
+
+  base: "Non-Backbase components required for every runtime"
+  platform: "Non-licenseable Backbase Platform components (Shared Services)"
+  identity: "Identity components"
+  foundation: "Foundation components"
+  # Licensable Products:
+  retail-banking-usa: "Components part of Retail-USA offering"
+  retail-banking-usa-web: "Product selection of Retail Banking + USA + Web"
+  retail-banking-usa-mobile: "Product selection of Retail Banking + USA + Mobile"
+  retail-banking-usa-backend: "Product selection of Retail Banking + USA + Backend"
+  retail-banking-universal: "Components part of Retail-Universal offering"
+  retail-banking-universal-web: "Product selection of Retail Banking + Universal + Web"
+  retail-banking-universal-mobile: "Product selection of Retail Banking + Universal + Mobile"
+  retail-banking-universal-backend: "Product selection of Retail Banking + Universal + Backend"
+  business-banking-usa: "Components part of Business USA offering"
+  business-banking-usa-web: "Product selection of Business Banking + USA + Web"
+  business-banking-usa-mobile: "Product selection of Business Banking + USA + Mobile"
+  business-banking-usa-backend: "Product selection of Business Banking + USA + Backend"
+  business-banking-universal: "Components part of Business universal offering"
+  business-banking-universal-web: "Product selection of Business Banking + Universal + Web"
+  business-banking-universal-mobile: "Product selection of Business Banking + Universal + Mobile"
+  business-banking-universal-backend: "Product selection of Business Banking + Universal + Backend"
+  wealth-management-universal: "Components part of Wealth Management universal offering"
+  wealth-management-universal-backend: "Product selection of Wealth Management + Universal + Backend"
+  wealth-management-universal-mobile: "Product selection of Wealth Management + Universal + Mobile"
+  wealth-management-universal-web: "Product selection of Wealth Management + Universal + Web"
+  employee-essentials: "Product selection of Employee Essentials"
+  employee-premium: "Product selection of Employee Premium"
+  retail-onboarding: "Retail Onboarding flow: Web + Backend + Mobile"
+  business-onboarding: "Business Onboarding flow: Web + Backend + Mobile"
+  credit-card-origination: "Credit Card Origination flow: Web + Backend + Mobile"
+  personal-loans: "Personal Loans flow: Web + Backend + Mobile"
+  # for premium of customer engagement load with selector `customer-engagement` & profile `customer-engagement-premium`
+  customer-engagement: "Product selection of Customer Engagement: engagement-web-app + user-segments-collector + user-segment"
+  unsecured-small-business-loans: "Unsecured Small Business Loans flow: Web + Backend + Mobile"
+  # Internal tags
+  dnr-ephemeral-base: "Internal infra tooling"
+
+applications:
+  dbportforward:
+    chart: dbportforward
+    repoURL: "{{ .sharedACR }}"
+    version: "0.1.2"
+    meta:
+      owners: "BaaS"
+      repo: "https://github.com/backbase-common/baas-charts/tree/main/dbportforward"
+    tags:
+      - base
+  secret-generator:
+    chart: secret-generator
+    version: "0.5.0"
+    repoURL: "{{ .sharedACR }}"
+    meta:
+      owners: "BaaS"
+      repo: "https://github.com/backbase-common/baas-charts/tree/main/secret-generator"
+    annotations:
+      argocd.argoproj.io/sync-wave: "-5"
+    tags:
+      - base
+      - dnr-ephemeral-base
+  dnr-mssql:
+    chart: mssql-server
+    version: 0.1.0
+    repoURL: "{{ .sharedACR }}"
+    meta:
+      owners: "BaaS"
+      repo: "https://github.com/backbase-common/baas-charts/tree/main/mssql-server"
+    tags:
+      - dnr-ephemeral-base
+    annotations:
+      argocd.argoproj.io/sync-wave: "-5"
+  dnr-activemq-classic:
+    chart: activemq-classic
+    version: 0.8.3
+    repoURL: "{{ .sharedACR }}"
+    meta:
+      owners: "BaaS"
+      repo: "https://github.com/backbase-common/baas-charts/tree/main/activemq-classic"
+    tags:
+      - dnr-ephemeral-base
+    annotations:
+      argocd.argoproj.io/sync-wave: "-5"
+  # Beginning of all Identity components
+  address-autocomplete:
+    chart: address-autocomplete
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-mobile
+      - retail-banking-universal
+      - retail-banking-universal-mobile
+      - business-banking-usa
+      - business-banking-universal
+    classes:
+      - dnr-bbom-apps-override
+  backbase-identity:
+    chart: backbase-identity
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - email-env
+      - contrast
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+      - wealth-management-universal
+      - wealth-management-universal-backend
+      - identity
+      - platform
+      - retail-onboarding
+  confirmation:
+    chart: confirmation
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+      - wealth-management-universal
+      - wealth-management-universal-backend
+      - identity
+  device-management-service:
+    chart: device-management-service
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-mobile
+      - retail-banking-universal
+      - retail-banking-universal-mobile
+      - business-banking-usa
+      - business-banking-usa-mobile
+      - business-banking-universal
+      - business-banking-universal-mobile
+      - wealth-management-universal
+      - wealth-management-universal-mobile
+      - identity
+  enrollment-manager:
+    chart: enrollment-manager
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-mobile
+      - retail-banking-universal
+      - retail-banking-universal-mobile
+  fido-service:
+    chart: fido-service
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-mobile
+      - retail-banking-universal
+      - retail-banking-universal-mobile
+      - business-banking-usa
+      - business-banking-usa-mobile
+      - business-banking-universal
+      - business-banking-universal-mobile
+      - wealth-management-universal
+      - wealth-management-universal-mobile
+      - identity
+      - platform
+  identity-integration:
+    chart: identity-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+      - wealth-management-universal
+      - wealth-management-universal-backend
+      - identity
+      - platform
+  mobile-authentication:
+    chart: mobile-authentication
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-mobile
+      - retail-banking-universal
+      - retail-banking-universal-mobile
+      - business-banking-usa
+      - business-banking-usa-mobile
+      - business-banking-universal
+      - business-banking-universal-mobile
+      - wealth-management-universal
+      - wealth-management-universal-mobile
+      - identity
+  oidc-token-converter:
+    chart: oidc-token-converter
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+      - wealth-management-universal
+      - wealth-management-universal-backend
+      - identity
+      - platform
+  orchestration:
+    chart: orchestration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+      - wealth-management-universal
+      - wealth-management-universal-backend
+      - identity
+  web-authentication:
+    chart: web-authentication
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - email-env
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-web
+      - business-banking-usa
+      - business-banking-usa-web
+      - business-banking-universal
+      - business-banking-universal-web
+      - wealth-management-universal
+      - wealth-management-universal-backend
+      - identity
+  # Beginning of all Foundation components
+  communication:
+    chart: communication
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+      - wealth-management-universal
+      - wealth-management-universal-backend
+      - foundation
+      - platform
+  contentservices:
+    chart: contentservices
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+      - wealth-management-universal
+      - wealth-management-universal-backend
+      - foundation
+      - platform
+  edge:
+    chart: edge
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+      - wealth-management-universal
+      - wealth-management-universal-backend
+      - foundation
+      - platform
+  provisioning:
+    chart: provisioning
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - foundation
+  pushintegrationservice:
+    chart: pushintegrationservice
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-mobile
+      - retail-banking-universal
+      - retail-banking-universal-mobile
+      - business-banking-usa
+      - business-banking-usa-mobile
+      - business-banking-universal
+      - business-banking-universal-mobile
+      - wealth-management-universal
+      - wealth-management-universal-mobile
+      - foundation
+  access-control:
+    chart: access-control
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+      - wealth-management-universal
+      - wealth-management-universal-backend
+      - platform
+  audit:
+    chart: audit
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+      - wealth-management-universal
+      - wealth-management-universal-backend
+      - platform
+  legalentity-integration-service:
+    chart: legalentity-integration-service
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+      - wealth-management-universal
+      - wealth-management-universal-backend
+  user-manager:
+    chart: user-manager
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+      - wealth-management-universal
+      - wealth-management-universal-backend
+      - platform
+      - retail-onboarding
+  user-lifecycle:
+    chart: user-lifecycle
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-mobile
+      - retail-banking-universal
+      - retail-banking-universal-mobile
+      - retail-onboarding
+  # Beginning of all Banking components
+  accessgroup-integration-service:
+    chart: accessgroup-integration-service
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+      - wealth-management-universal
+      - wealth-management-universal-backend
+  accounting-integration-service:
+    chart: accounting-integration-service
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+  account-statement:
+    chart: account-statement
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+      - wealth-management-universal
+      - wealth-management-universal-backend
+  approval-service:
+    chart: approval-service
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+  arrangement-manager:
+    chart: arrangement-manager
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+      - wealth-management-universal
+      - wealth-management-universal-backend
+  bank-calendar:
+    chart: bank-calendar
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+    tags:
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+  billpay-integrator:
+    chart: billpay-integrator
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+  billpay-integration-payveris-service:
+    chart: billpay-integration-payveris-service
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - payveris
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+  budget-planner:
+    chart: budget-planner
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+  card-manager:
+    chart: card-manager
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+  cashflow:
+    chart: cashflow
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+  comments:
+    chart: comments
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+      - wealth-management-universal
+      - wealth-management-universal-backend
+  contact-manager:
+    chart: contact-manager
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+  employee:
+    chart: employee
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+      - wealth-management-universal
+      - wealth-management-universal-backend
+      - employee-essentials
+      - employee-premium
+  employee-actions:
+    chart: employee-actions
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - employee-essentials
+      - employee-premium
+  exchange-integration-service:
+    chart: exchange-integration-service
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+    tags:
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+      - wealth-management-universal
+      - wealth-management-universal-backend
+  external-account-aggregator:
+    chart: external-account-aggregator
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - yodlee
+      - contrast
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+  financial-institution-manager:
+    chart: financial-institution-manager
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - yodlee
+      - contrast
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+  income-expense-analyzer:
+    chart: income-expense-analyzer
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+  loan:
+    chart: loan
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+  limit:
+    chart: limit
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+  messages:
+    chart: messages
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+      - wealth-management-universal
+      - wealth-management-universal-backend
+      - foundation
+  metric:
+    chart: metric
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+    tags:
+      - customer-engagement
+  notifications:
+    chart: notifications
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+      - wealth-management-universal
+      - wealth-management-universal-backend
+      - foundation
+  payment-order-service:
+    chart: payment-order-service
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+      - wealth-management-universal
+      - wealth-management-universal-backend
+  payment-order-a2a:
+    chart: payment-order-a2a
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+  payment-batch:
+    chart: payment-batch
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+  payment-order-options:
+    chart: payment-order-options
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+  payment-synchronizer:
+    chart: payment-synchronizer
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+  payveris-p2p-integrator:
+    chart: payveris-p2p-integrator
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+  pocket-tailor:
+    chart: pocket-tailor
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+  portfolio:
+    chart: portfolio
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - wealth-management-universal
+      - wealth-management-universal-backend
+  wealth-sandbox:
+    chart: wealth-core
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+  wealth-sandbox-worker:
+    chart: wealth-worker
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+  remote-deposit-capturer:
+    chart: remote-deposit-capturer
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+  rtc:
+    chart: rtc
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - employee-premium
+  rtc-twilio-integrator:
+    chart: rtc-twilio-integrator
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - employee-premium
+  rtc-twilio-resource-setup:
+    chart: rtc-twilio-resource-setup
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    tags:
+      - employee-premium
+  savvy-money-credit-scorer:
+    chart: savvy-money-credit-scorer
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+  transaction-category-collector:
+    chart: transaction-category-collector
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - yodlee
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+  transaction-enricher:
+    chart: transaction-enricher
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - yodlee
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+  transaction-manager:
+    chart: transaction-manager
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+  vendor-payveris-service:
+    chart: vendor-payveris-service
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - payveris
+      - contrast
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+  customer-provider-integration-service:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - mambu
+      - contrast
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+  customer-provider-integrator:
+    chart: customer-provider-integrator
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+  # Beginning of all Apps
+  employee-essentials-web:
+    chart: portalless
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .portallessVersion }}"
+    tags:
+      - employee-essentials
+  employee-web:
+    chart: portalless
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .portallessVersion }}"
+    tags:
+      - employee-premium
+  retail-us-web:
+    chart: portalless
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .portallessVersion }}"
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-web
+  retail-universal-web:
+    chart: portalless
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .portallessVersion }}"
+    tags:
+      - retail-banking-universal
+      - retail-banking-universal-web
+  business-us-web:
+    chart: portalless
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .portallessVersion }}"
+    tags:
+      - business-banking-usa
+      - business-banking-usa-web
+  business-universal-web:
+    chart: portalless
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .portallessVersion }}"
+    tags:
+      - business-banking-universal
+      - business-banking-universal-web
+  wealth-universal-web:
+    chart: portalless
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .portallessVersion }}"
+    tags:
+      - wealth-management-universal
+      - wealth-management-universal-web
+  # Beginning of flow
+  retail-onboarding-bootstrap:
+    chart: backbase-bootstrap-task
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - flow-bootstrap-task
+    tags:
+      - retail-onboarding
+  retail-onboarding-service:
+    chart: flow-service
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .flowServiceVersion }}"
+    classes:
+      - flow-service
+      - flow
+      - contrast
+    tags:
+      - retail-onboarding
+  retail-onboarding-case-manager:
+    chart: portalless
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .portallessVersion }}"
+    classes:
+      - flow-case-manager
+      - flow
+    tags:
+      - retail-onboarding
+  retail-onboarding-prospect:
+    chart: portalless
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .portallessVersion }}"
+    classes:
+      - flow-prospect-app
+      - flow
+    tags:
+      - retail-onboarding
+  business-onboarding-bootstrap:
+    chart: backbase-bootstrap-task
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - flow-bootstrap-task
+    tags:
+      - business-onboarding
+  business-onboarding-service:
+    chart: flow-service
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .flowServiceVersion }}"
+    classes:
+      - flow-service
+      - flow
+      - contrast
+    tags:
+      - business-onboarding
+  business-onboarding-case-manager:
+    chart: portalless
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .portallessVersion }}"
+    classes:
+      - flow-case-manager
+      - flow
+    tags:
+      - business-onboarding
+  business-onboarding-prospect:
+    chart: portalless
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .portallessVersion }}"
+    classes:
+      - flow-prospect-app
+      - flow
+    tags:
+      - business-onboarding
+  credit-card-origination-bootstrap:
+    chart: backbase-bootstrap-task
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - flow-bootstrap-task
+    tags:
+      - credit-card-origination
+  credit-card-origination-service:
+    chart: flow-service
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .flowServiceVersion }}"
+    classes:
+      - flow-service
+      - flow
+      - contrast
+    tags:
+      - credit-card-origination
+  credit-card-origination-prospect:
+    chart: portalless
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .portallessVersion }}"
+    classes:
+      - flow-prospect-app
+      - flow
+    tags:
+      - credit-card-origination
+  credit-card-origination-case-manager:
+    chart: portalless
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .portallessVersion }}"
+    classes:
+      - flow-case-manager
+      - flow
+    tags:
+      - credit-card-origination
+  personal-loans-bootstrap:
+    chart: backbase-bootstrap-task
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - flow-bootstrap-task
+    tags:
+      - personal-loans
+  personal-loans-service:
+    chart: flow-service
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .flowServiceVersion }}"
+    classes:
+      - flow-service
+      - flow
+      - contrast
+    tags:
+      - personal-loans
+  personal-loans-case-manager:
+    chart: portalless
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .portallessVersion }}"
+    classes:
+      - flow-case-manager
+      - flow
+    tags:
+      - personal-loans
+  personal-loans-prospect:
+    chart: portalless
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .portallessVersion }}"
+    classes:
+      - flow-prospect-app
+      - flow
+    tags:
+      - personal-loans
+  unsecured-small-business-loans-bootstrap:
+    chart: backbase-bootstrap-task
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - flow-bootstrap-task
+    tags:
+      - unsecured-small-business-loans
+  unsecured-small-business-loans-service:
+    chart: flow-service
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .flowServiceVersion }}"
+    classes:
+      - flow-service
+      - flow
+      - contrast
+    tags:
+      - unsecured-small-business-loans
+  unsecured-small-business-loans-case-manager:
+    chart: portalless
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .portallessVersion }}"
+    classes:
+      - flow-case-manager
+      - flow
+    tags:
+      - unsecured-small-business-loans
+  unsecured-small-business-loans-prospect:
+    chart: portalless
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .portallessVersion }}"
+    classes:
+      - flow-prospect-app
+      - flow
+    tags:
+      - unsecured-small-business-loans
+  party-profile:
+    chart: party-profile
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .digitalSalesVersion }}"
+    tags:
+      - retail-onboarding
+  identity-proxy:
+    chart: identity-proxy
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .digitalSalesVersion }}"
+    tags:
+      - retail-onboarding
+  customer-integration-service:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - mambu
+    tags:
+      - retail-onboarding
+  deposit-account-integration-service:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - mambu
+    tags:
+      - retail-onboarding
+  # CLIMBER
+  climber:
+    chart: climber
+    version: "1.2.0"
+    repoURL: "{{ .sharedACR }}"
+  # Beginning of all ModelBank components
+  account-integration-service:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - mambu
+      - contrast
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+  account-statement-integration-service:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - mambu
+      - contrast
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+  arrangement-integration-closure-service:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - mambu
+      - contrast
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+  arrangement-integration-origination-service:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - mambu
+      - contrast
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+  arrangement-pull-integration-service:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - mambu
+      - contrast
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+  balance-history-event-consumer:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - contrast
+    tags:
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+  balance-history-event-publisher:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - mambu
+      - contrast
+    tags:
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+  batch-integration-service:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - mambu
+      - contrast
+    tags:
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+  billpay-enrolment-integration-service:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - mambu
+      - contrast
+  cards-presentation-service:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - marqeta
+      - contrast
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+  central-communication-service:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - email-env
+      - contrast
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+      - wealth-management-universal
+      - wealth-management-universal-backend
+  core-banking-batches-simulator:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - mambu
+      - contrast
+    tags:
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+  custom-enrollment-support-integration:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - mambu
+      - contrast
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+  custom-user-profile-manager:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - mambu
+      - contrast
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+      - wealth-management-universal
+  event-listener-service:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - contrast
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+  legalentity-integration-outbound-service:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - mambu
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+  loan-integration-outbound-service:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - mambu
+      - contrast
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+  market-news-service:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - contrast
+    tags:
+      - wealth-management-universal
+      - wealth-management-universal-backend
+  portfolio-mock-service:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - contrast
+  payment-integration-service:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - mambu
+      - contrast
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+  payveris-integration-service:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - contrast
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+  portfolio-instrument-integration-service:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - drive-wealth
+      - contrast
+    tags:
+      - wealth-management-universal
+      - wealth-management-universal-backend
+  portfolio-outbound-integration:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - drive-wealth
+      - contrast
+    tags:
+      - wealth-management-universal
+      - wealth-management-universal-backend
+  portfolio-trading-integration-service:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - drive-wealth
+      - contrast
+    tags:
+      - wealth-management-universal
+      - wealth-management-universal-backend
+  places-presentation-service:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - mambu
+      - contrast
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+  transaction-integration-check-images:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - contrast
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+  transaction-pull-integration-service:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - mambu
+      - contrast
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+  twilio-connector:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - contrast
+  engage-sms-connector:
+    chart: engage-sms-connector
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+      - foundation
+  amazon-ses-connector:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - email-env
+      - contrast
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+      - foundation
+  stop-checks-integration-service:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - contrast
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+  wealth-data-sync-service:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - drive-wealth
+      - contrast
+    tags:
+      - wealth-management-universal
+      - wealth-management-universal-backend
+  # Data ingestion
+  backbase-bootstrap-task:
+    chart: backbase-bootstrap-task
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - mambu
+      - marqeta
+    tags:
+      - retail-banking-usa
+      - retail-banking-usa-backend
+      - retail-banking-universal
+      - retail-banking-universal-backend
+      - business-banking-usa
+      - business-banking-usa-backend
+      - business-banking-universal
+      - business-banking-universal-backend
+      - wealth-management-universal
+      - wealth-management-universal-backend
+  # Begin of Remote Config Services
+  remote-config:
+    chart: remote-config
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+    tags:
+      - foundation
+  remote-config-web:
+    chart: portalless
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .portallessVersion }}"
+    tags:
+      - foundation
+  remote-config-registration-web-app:
+    chart: provisioner
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    tags:
+      - foundation
+  remote-config-registration-ios:
+    chart: provisioner
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    tags:
+      - foundation
+  remote-config-registration-android:
+    chart: provisioner
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    tags:
+      - foundation
+  # Begin of CE Services
+  content-enricher:
+    chart: content-enricher
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    tags:
+      - foundation
+  realtime-engagement-orchestrator:
+    chart: realtime-engagement-orchestrator
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    tags:
+      - foundation
+  event-emitter:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+  engagement:
+    chart: engagement
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+    tags:
+      - foundation
+  engage-web-app:
+    chart: portalless
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .portallessVersion }}"
+    tags:
+      - customer-engagement
+  # The versions for engage-defaults for the static content suppose to be passed via the installation config.
+  # and it's usually different for business & retail runtimes & can differ for the customers accordingly.
+  engage-defaults:
+    chart: provisioner
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    tags:
+      - foundation
+  user-segment:
+    chart: user-segment
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+    tags:
+      - customer-engagement
+  user-segments-collector:
+    chart: user-segments-collector
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+    tags:
+      - customer-engagement
+  # content services
+  azure-blob-storage-connector:
+    chart: azure-blob-storage-connector
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - contrast
+      - dnr-bbom-apps-override
+    tags:
+      - foundation
+      - platform
+  # content services
+  dnr-mock-engine:
+    chart: mock-engine
+    repoURL: "{{ .sharedACR }}"
+    version: 1.0.21
+    tags:
+      - foundation
+
+  # API Tracker job scheduler
+  api-tracker:
+    chart: api-tracker
+    repoURL: "{{ .sharedACR }}"
+    version: "0.0.1"
+    classes:
+      - mambu
+      - marqeta
+
+  # Begin internal applications
+  dnr-user-profile-manager:
+    # don't use generic-integration chart as not integrating with mambu - and therefore need by that custom doesn't have db
+    chart: user-profile-manager
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    classes:
+      - dnr-bbom-apps-override
+  dnr-identity-test-app:
+    chart: portalless
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .portallessVersion }}"
+  dnr-communications-outbound-integration-mock:
+    chart: generic-integration
+    repoURL: crbackbasesharedprd874.azurecr.io/charts
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - dnr-bbom-apps-override
+  dnr-enrollment-support-api:
+    chart: generic-integration
+    repoURL: crbackbasesharedprd874.azurecr.io/charts
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - dnr-bbom-apps-override
+  dnr-hard-token-integration-outbound-mock:
+    chart: generic-integration
+    repoURL: crbackbasesharedprd874.azurecr.io/charts
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - dnr-bbom-apps-override
+  dnr-legalentity-integration-external-mock:
+    chart: generic-integration
+    repoURL: crbackbasesharedprd874.azurecr.io/charts
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - dnr-bbom-apps-override
+  dnr-user-integration-external-mock:
+    chart: generic-integration
+    repoURL: crbackbasesharedprd874.azurecr.io/charts
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - dnr-bbom-apps-override
+  dnr-user-profile-core-mock:
+    chart: generic-integration
+    repoURL: crbackbasesharedprd874.azurecr.io/charts
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - dnr-bbom-apps-override
+  dnr-transaction-signing-mock:
+    chart: generic-integration
+    repoURL: crbackbasesharedprd874.azurecr.io/charts
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - dnr-bbom-apps-override
+  dnr-identity-setup:
+    chart: identity-setup
+    repoURL: https://harbor.backbase.eu/chartrepo/internal/
+    version: "2.8.1-202310"
+  # default SMTP configuration is to use identity-fake-smtp in ephemeral unless profile backbase-identity/dnr-ses selected
+  dnr-identity-fake-smtp-service:
+    chart: identity-fake-smtp-service
+    repoURL: https://harbor.backbase.eu/chartrepo/internal/
+    version: "0.2.2"
+    tags:
+      - dnr-ephemeral-base
+  dnr-account-statement-integration-mock:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - dnr-bbom-apps-override
+  dnr-loan-integration-outbound-mock:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - dnr-bbom-apps-override
+  dnr-payment-batch-core-mock:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - dnr-bbom-apps-override
+  dnr-payment-order-core-mock-service:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - dnr-bbom-apps-override
+  dnr-account-mock:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    classes:
+      - dnr-bbom-apps-override
+  positive-pay-ach:
+    chart: positive-pay-ach
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    annotations:
+      argocd.argoproj.io/sync-wave: "1"
+    tags:
+      - business-banking-usa
+      - business-banking-usa-backend
+  positive-pay-check:
+    chart: positive-pay-check
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .globalVersion }}"
+    annotations:
+      argocd.argoproj.io/sync-wave: "1"
+    tags:
+      - business-banking-usa
+      - business-banking-usa-backend
+  positive-pay-integration-mock:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    annotations:
+      argocd.argoproj.io/sync-wave: "1"
+    tags:
+      - business-banking-usa
+      - business-banking-usa-backend
+  positive-pay-ach-integration-mock:
+    chart: generic-integration
+    repoURL: "{{ .sharedACR }}"
+    version: "{{ .genericIntegrationVersion }}"
+    annotations:
+      argocd.argoproj.io/sync-wave: "1"
+    tags:
+      - business-banking-usa
+      - business-banking-usa-backend
+
+# Used to select which releases and/or tags will be included or excluded.
+# This should remain empty inside the Topstack repo
+selector: []
+
+# Profiles are values that are overlaid onto the default values.
+# Both of these should remain empty inside the Topstack repo
+profiles: {}
+profileSelector: []
+
+# changes what is outputted.  Possible values are:
+#  argo - outputs applications as an argo Application (default)
+#  json - outputs various application information in json
+#  helm - outputs helm template commands in a json list
+outputType: "argo"
+
+topstackDebugging:
+  # Set to true to show debugging
+  enabled: false
+  merge:
+    # detailLevel can be:
+    # - summary - just print an explanation of what and why the merge is happening
+    # - diff - show a summary, then print the values with +/-/! showing what has changed
+    # - full - print the summary, then print out of the original values, plus the new values, and then the diff
+    detailLevel: "diff"
+    # By default, if a file exists but is empty (like a global profile values.yaml) the explanation will be skipped.
+    # Setting this to false will force the output to be included
+    skipIfIncomingValuesEmpty: true
