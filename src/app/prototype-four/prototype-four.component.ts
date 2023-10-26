@@ -75,6 +75,8 @@ export class PrototypeFourComponent implements OnInit {
     [ProductComponents.businessBankingUSA]: [false],
     [ProductComponents.businessBankingUniversal]: [false],
     [ProductComponents.digitalAssist]: [false],
+    [ProductComponents.digitalOnboarding]: [false],
+    [ProductComponents.digitalLending]: [false],
     [ProductComponents.digitalEngage]: [false],
     [ProductComponents.retailBankingUSA]: [false],
     [ProductComponents.retailBankingUniversal]: [false],
@@ -85,6 +87,7 @@ export class PrototypeFourComponent implements OnInit {
     [ChangeTypeName.bugFix]: [true],
     [ChangeTypeName.breakingChange]: [true],
     [ChangeTypeName.deprecated]: [true],
+    [ChangeTypeName.updated]: [true],
     [ChangeTypeName.feature]: [true],
     [ChangeTypeName.securityFix]: [true],
   };

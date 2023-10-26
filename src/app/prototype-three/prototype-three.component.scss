@@ -22,12 +22,12 @@
   display: flex;
   .filters {
     background-color: #fff;
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: hidden;
     display: flex;
     flex-direction: column;
     gap: 2em;
-    max-height: 66vh;
+    max-height: 40vh;
     width: 15%;
     padding: 1em 1em 3.2em 1em;
     h3 {
@@ -55,7 +55,7 @@
   }
   .release-details {
     width: 100%;
-    padding-bottom: 2em;
+    padding: 0 1em;
   }
 }
 

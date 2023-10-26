@@ -83,6 +83,7 @@ export class PrototypeThreeComponent implements OnInit {
       [ChangeTypeName.deprecated]: [true],
       [ChangeTypeName.feature]: [true],
       [ChangeTypeName.securityFix]: [true],
+      [ChangeTypeName.updated]: [true],
     }),
     enableBackend: [false, Validators.required],
     discipline: this.fb.group(this.disciplineForm),
