@@ -23,9 +23,7 @@
   class="mat-elevation-z8"
   matSort
   matSortActive="Calver"
-  matSortDirection="asc"
-  style="height: 500px; overflow: auto;"
->
+  matSortDirection="asc">
   <ng-container matColumnDef="Calver">
     <th mat-header-cell *matHeaderCellDef>Calver</th>
     <td
@@ -105,7 +103,8 @@
     </td>
   </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>
 </div>

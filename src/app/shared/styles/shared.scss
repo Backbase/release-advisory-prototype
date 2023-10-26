@@ -28,12 +28,12 @@
 }
 
 .table-container {
-  height: 30vh;
+  max-height: 30vh;
   max-width: 100%;
   overflow: auto;
 }
 app-prototype-four .table-container {
-  height: 40vh;
+  max-height: 40vh;
   max-width: 100%;
   overflow: auto;
 }

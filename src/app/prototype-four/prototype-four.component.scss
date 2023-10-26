@@ -22,36 +22,45 @@
   display: flex;
   .filters {
     background-color: #fff;
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: hidden;
     display: flex;
     flex-direction: column;
     gap: 2em;
-    max-height: 70vh;
+    max-height: 55vh;
     width: 20%;
-    padding: 1em 1em 3.2em 1em;
     h3 {
       font-size: 1.4em;
       font-weight: bold;
       color: var(--font-title-color);
+      position: sticky;
+      top:0;
+      padding: 1rem 1rem 0;
+      background-color: #fff;
+      z-index: 1000;
     }
 
-    .option-type {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      h4 {
-        font-size: 1.2em;
-        font-weight: 500;
-        color: var(--font-title-color);
+    .option-container{
+      padding: 0 1rem;
+
+      .option-type {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        h4 {
+          font-size: 1.2em;
+          font-weight: 500;
+          color: var(--font-title-color);
+        }
+      }
+  
+      .filter-select {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
       }
     }
 
-    .filter-select {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5em;
-    }
   }
   .release-details {
     width: 100%;

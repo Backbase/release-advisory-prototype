@@ -36,54 +36,52 @@
     <div class="details-wrapper" *ngIf="advisoryForm.controls.target.valid">
       <div class="filters">
         <h3>Filter options</h3>
-
-        <div class="option-type">
-          <h4>Calver</h4>
-          <div class="filter-select">
-            <mat-form-field>
-              <mat-label>Choose an option</mat-label>
-              <select matNativeControl [formControl]="filterForm.controls.calVer">
-                <option [value]="option" *ngFor="let option of calVerList">
-                  {{ option }}
-                </option>
-              </select>
-            </mat-form-field>
+        <div class="option-container">
+          <div class="option-type">
+            <h4>Calver</h4>
+            <div class="filter-select">
+              <mat-form-field>
+                <mat-label>Choose an option</mat-label>
+                <select matNativeControl [formControl]="filterForm.controls.calVer">
+                  <option [value]="option" *ngFor="let option of calVerList">
+                    {{ option }}
+                  </option>
+                </select>
+              </mat-form-field>
+            </div>
           </div>
-        </div>
-
-        <div class="option-type">
-          <h4>Change Type</h4>
-          <div class="filter-select">
-            <mat-checkbox color="primary" [formControl]="
-                filterForm.controls.changeType.controls[changeType.name]
-              " checked="true" *ngFor="let changeType of changeTypeList">{{ changeType.name }}</mat-checkbox>
+          <div class="option-type">
+            <h4>Change Type</h4>
+            <div class="filter-select">
+              <mat-checkbox color="primary" [formControl]="
+                  filterForm.controls.changeType.controls[changeType.name]
+                " checked="true" *ngFor="let changeType of changeTypeList">{{ changeType.name }}</mat-checkbox>
+            </div>
           </div>
-        </div>
-        <div class="option-type">
-          <h4>Disciplines</h4>
-          <div class="filter-select">
-            <mat-checkbox color="primary" [formControl]="
-                advisoryForm.controls.discipline.controls[discipline.name]
-              " [checked]="discipline.isSelected" *ngFor="let discipline of disciplineList">{{ discipline.name
-              }}</mat-checkbox>
-          </div>
-        </div>
-        <div class="option-type">
-          <h4>Products</h4>
-          <div class="filter-select">
-            <div *ngFor="let product of productList">
-              <mat-checkbox color="primary" *ngIf="filterForm.controls.product.controls[product.name].value"
-                [formControl]="
-                  filterForm.controls.product.controls[product.name]
-                " [ngModel]="
-                  filterForm.controls.product.controls[product.name].value
-                ">{{ product.name }}
-                {{
-                filterForm.controls.product.controls[product.name].value
+          <div class="option-type">
+            <h4>Disciplines</h4>
+            <div class="filter-select">
+              <mat-checkbox color="primary" [formControl]="
+                  advisoryForm.controls.discipline.controls[discipline.name]
+                " [checked]="discipline.isSelected" *ngFor="let discipline of disciplineList">{{ discipline.name
                 }}</mat-checkbox>
             </div>
           </div>
+          <div class="option-type">
+            <h4>Products</h4>
+            <div class="filter-select">
+              <div *ngFor="let product of productList">
+                <mat-checkbox color="primary" *ngIf="filterForm.controls.product.controls[product.name].value"
+                  [formControl]="
+                    filterForm.controls.product.controls[product.name]
+                  " [ngModel]="
+                    filterForm.controls.product.controls[product.name].value
+                  ">{{ product.name }}</mat-checkbox>
+              </div>
+            </div>
+          </div>
         </div>
+
       </div>
       <div class="release-details">
         <app-change-table-random *ngIf="
