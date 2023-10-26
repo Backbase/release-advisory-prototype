@@ -46,3 +46,9 @@
     color: var(--primary-color);
   }
 }
+
+.table-container {
+  height: 30vh;
+  max-width: 100%;
+  overflow: auto;
+}
