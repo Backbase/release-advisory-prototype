@@ -34,4 +34,6 @@
 }
 app-prototype-four .table-container {
   max-height: 40vh;
+  max-width: 100%;
+  overflow: auto;
 }
