@@ -30,6 +30,8 @@ export enum ProductComponents {
   businessBankingUniversal = 'Business Banking Universal',
   wealthManagement = 'Wealth Management',
   digitalAssist = 'Digital Assist',
+  digitalOnboarding = 'Digital Onboarding',
+  digitalLending = 'Digital Lending',
   digitalEngage = 'Digital Engage',
 }
 
@@ -37,6 +39,8 @@ export const products: ProductComponents[] = [
   ProductComponents.businessBankingUSA,
   ProductComponents.businessBankingUniversal,
   ProductComponents.digitalAssist,
+  ProductComponents.digitalOnboarding,
+  ProductComponents.digitalLending,
   ProductComponents.digitalEngage,
   ProductComponents.retailBankingUSA,
   ProductComponents.retailBankingUniversal,
@@ -44,10 +48,10 @@ export const products: ProductComponents[] = [
 ];
 
 export const disciplines: Disciplines[] = [
-  Disciplines.web,
-  Disciplines.android,
-  Disciplines.ios,
   Disciplines.backend,
+  Disciplines.web,
+  Disciplines.ios,
+  Disciplines.android,
 ];
 
 export const softwareComponentSuffixes = {
@@ -208,6 +212,24 @@ export const softwareComponentsByProduct = {
     { software: 'user-search-premium', product: 'User Search Premium' },
     { software: 'user-sessions', product: 'User Sessions' },
     { software: 'voice-call', product: 'Voice Call' },
+  ],
+  [ProductComponents.digitalOnboarding]: [
+    { software: 'account-funding-paymentus', product: 'Account Funding Paymentus' },
+    { software: 'account-verification', product: 'Account Verification' },
+    { software: 'address-validation', product: 'Address Validation' },
+    { software: 'action-notice', product: 'Action Notice' },
+    { software: 'agreement-review', product: 'Agreement Review' },
+    { software: 'beneficiaries', product: 'Beneficiaries' },
+  ],
+  [ProductComponents.digitalLending]: [
+    { software: 'accounting-import', product: 'Accounting Import' },
+    { software: 'address Validation', product: 'Address Validation' },
+    { software: 'car-valuation', product: 'Car Valuation' },
+    { software: 'company-lookup', product: 'Company Lookup' },
+    { software: 'credit-decisioning', product: 'Credit Decisioning' },
+    { software: 'credit-report', product: ' Credit Report' },
+
+
   ],
   [ProductComponents.digitalEngage]: [
     { software: 'analyze-engagements', product: 'Analyze Engagements' },

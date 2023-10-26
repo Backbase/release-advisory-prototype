@@ -1,19 +1,13 @@
 <div class="container">
-  <h1>Release Advisory</h1>
-  <div class="product-list margin-top-xs">
+  <div class="product-list">
     <h2>Select Products</h2>
     <div class="product">
-      <mat-checkbox
-        [class]="
+      <mat-checkbox [class]="
           advisoryForm.controls.product.controls[product.name].value
             ? 'selected-product'
             : 'not-selected-product'
-        "
-        color="primary"
-        [formControl]="advisoryForm.controls.product.controls[product.name]"
-        *ngFor="let product of productList"
-        >{{ product.name }}</mat-checkbox
-      >
+        " color="primary" [formControl]="advisoryForm.controls.product.controls[product.name]"
+        *ngFor="let product of productList">{{ product.name }}</mat-checkbox>
     </div>
   </div>
   <div class="discipline margin-top-xs" *ngIf="isProductSelected()">
@@ -22,20 +16,14 @@
         <h2>Select Calver</h2>
         <div class="calver-selection">
           <div class="source">
-            <app-calver-select
-              title="Source version"
-              [options]="options"
+            <app-calver-select title="Source version" [options]="options"
               [filteredOptions]="filteredOptionsSource | async"
-              [calverControl]="advisoryForm.controls['source']"
-            ></app-calver-select>
+              [calverControl]="advisoryForm.controls['source']"></app-calver-select>
           </div>
           <div class="target">
-            <app-calver-select
-              title="Target version"
-              [options]="options"
+            <app-calver-select title="Target version" [options]="options"
               [filteredOptions]="filteredOptionsTarget | async"
-              [calverControl]="advisoryForm.controls['target']"
-            ></app-calver-select>
+              [calverControl]="advisoryForm.controls['target']"></app-calver-select>
           </div>
         </div>
       </ng-container>
@@ -54,10 +42,7 @@
           <div class="filter-select">
             <mat-form-field>
               <mat-label>Choose an option</mat-label>
-              <select
-                matNativeControl
-                [formControl]="filterForm.controls.calVer"
-              >
+              <select matNativeControl [formControl]="filterForm.controls.calVer">
                 <option [value]="option" *ngFor="let option of calVerList">
                   {{ option }}
                 </option>
@@ -69,52 +54,41 @@
         <div class="option-type">
           <h4>Change Type</h4>
           <div class="filter-select">
-            <mat-checkbox
-              color="primary"
-              [formControl]="
+            <mat-checkbox color="primary" [formControl]="
                 filterForm.controls.changeType.controls[changeType.name]
-              "
-              checked="true"
-              *ngFor="let changeType of changeTypeList"
-              >{{ changeType.name }}</mat-checkbox
-            >
+              " checked="true" *ngFor="let changeType of changeTypeList">{{ changeType.name }}</mat-checkbox>
           </div>
         </div>
         <div class="option-type">
           <h4>Disciplines</h4>
           <div class="filter-select">
-            <mat-checkbox
-              color="primary"
-              [formControl]="
+            <mat-checkbox color="primary" [formControl]="
                 advisoryForm.controls.discipline.controls[discipline.name]
-              "
-              [checked]="discipline.isSelected"
-              *ngFor="let discipline of disciplineList"
-              >{{ discipline.name }}</mat-checkbox
-            >
+              " [checked]="discipline.isSelected" *ngFor="let discipline of disciplineList">{{ discipline.name
+              }}</mat-checkbox>
           </div>
         </div>
         <div class="option-type">
           <h4>Products</h4>
           <div class="filter-select">
-            <mat-checkbox
-              color="primary"
-              [formControl]="filterForm.controls.product.controls[product.name]"
-              [checked]="product.isSelected"
-              *ngFor="let product of productList"
-              >{{ product.name }}</mat-checkbox
-            >
+            <div *ngFor="let product of productList">
+              <mat-checkbox color="primary" *ngIf="filterForm.controls.product.controls[product.name].value"
+                [formControl]="
+                  filterForm.controls.product.controls[product.name]
+                " [ngModel]="
+                  filterForm.controls.product.controls[product.name].value
+                ">{{ product.name }}
+                {{
+                filterForm.controls.product.controls[product.name].value
+                }}</mat-checkbox>
+            </div>
           </div>
         </div>
       </div>
       <div class="release-details">
-        <app-change-table-random
-          *ngIf="
+        <app-change-table-random *ngIf="
             advisoryForm.controls.target.valid && dataSource.data.length > 0
-          "
-          [dataSource]="dataSource"
-          [displayedColumns]="displayedColumns"
-        ></app-change-table-random>
+          " [dataSource]="dataSource" [displayedColumns]="displayedColumns"></app-change-table-random>
         <div class="no-result" *ngIf="dataSource.data.length === 0">
           No results found for specified filter criteria. Try using a different
           filter criteria or different search keywords.

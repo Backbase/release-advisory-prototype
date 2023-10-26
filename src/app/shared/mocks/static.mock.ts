@@ -29,18 +29,20 @@ export const calVerOptions: string[] = [
 ];
 
 export const disciplines: Discipline[] = [
-  { name: Disciplines.web, isSelected: false },
   { name: Disciplines.backend, isSelected: true },
+  { name: Disciplines.web, isSelected: false },
   { name: Disciplines.ios, isSelected: false },
   { name: Disciplines.android, isSelected: false },
 ];
 
 export const changeType: ChangeType[] = [
-  { name: ChangeTypeName.feature, color: 'primary', isChecked: true },
-  { name: ChangeTypeName.bugFix, color: 'bugfix', isChecked: true },
-  { name: ChangeTypeName.deprecated, color: 'accent', isChecked: true },
   { name: ChangeTypeName.breakingChange, color: 'warn', isChecked: true },
+  { name: ChangeTypeName.deprecated, color: 'accent', isChecked: true },
   { name: ChangeTypeName.securityFix, color: 'primary', isChecked: true },
+  { name: ChangeTypeName.bugFix, color: 'bugfix', isChecked: true },
+  { name: ChangeTypeName.feature, color: 'primary', isChecked: true },
+  { name: ChangeTypeName.updated, color: 'primary', isChecked: true },
+
 ];
 
 export const components: any[] = [
@@ -135,6 +137,14 @@ export const productList: ProductComponent[] = [
   },
   {
     name: ProductComponents.digitalAssist,
+    isSelected: false,
+  },
+  {
+    name: ProductComponents.digitalOnboarding,
+    isSelected: false,
+  },
+  {
+    name: ProductComponents.digitalLending,
     isSelected: false,
   },
   {
