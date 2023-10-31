@@ -70,13 +70,13 @@
           <div class="option-type">
             <h4>Products</h4>
             <div class="filter-select">
-              <div *ngFor="let product of productList">
-                <mat-checkbox color="primary" *ngIf="filterForm.controls.product.controls[product.name].value"
+              <div *ngFor="let product of selectedProductList">
+                <mat-checkbox color="primary"
                   [formControl]="
-                    filterForm.controls.product.controls[product.name]
+                    filterForm.controls.product.controls[product]
                   " [ngModel]="
-                    filterForm.controls.product.controls[product.name].value
-                  ">{{ product.name }}</mat-checkbox>
+                    filterForm.controls.product.controls[product].value
+                  ">{{ product }}</mat-checkbox>
               </div>
             </div>
           </div>
