@@ -63,6 +63,7 @@ export class PrototypeFourComponent implements OnInit {
   readonly displayedColumns: ChangeTitleRandom[] = changeTypeHeadingsRandom;
   readonly options: string[] = calVerOptions;
   readonly changeTypeList = [...changeType];
+  public selectedProductList: string[] = [];
 
   readonly disciplineForm = {
     [Disciplines.android]: [false],
@@ -200,7 +201,9 @@ export class PrototypeFourComponent implements OnInit {
     const selectedProducts = selectedProductKeys.filter(
       (key) => value.product[key]
     );
-
+    this.selectedProductList = selectedProductKeys.filter(
+      (key) => value.product[key]
+    );
     selectedProducts.forEach((product) =>
       this.filterForm.controls.product.controls[product].patchValue(true)
     );
@@ -262,7 +265,6 @@ export class PrototypeFourComponent implements OnInit {
       const selectedProducts = selectedProductKeys.filter(
         (key) => value.product[key]
       );
-
       this.dataSource.data = newDataSource.filter((datum) => {
         const calVerOption = !value.calVer
           ? true
