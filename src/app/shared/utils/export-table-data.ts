@@ -32,9 +32,10 @@ export class TableUtil {
         jsonData.map((item) => ({
           Calver: item.calVer,
           Product: item.product,
+          'Software Component': item.component,
+          Version: item.version,
           Discipline: item.discipline,
           'Change Type': item.changeType.name,
-          Version: item.version,
           Title: item.title,
           Description: item.description,
         }))
