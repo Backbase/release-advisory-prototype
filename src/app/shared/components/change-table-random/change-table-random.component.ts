@@ -11,6 +11,8 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { Changes } from '../../models/generated.model';
 import { MatButtonModule } from '@angular/material/button';
 import { HighlightSearchPipe } from '../../pipes/highlight.pipe';
+import { TableUtil } from '../../utils/export-table-data';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-change-table-random',
@@ -25,6 +27,7 @@ import { HighlightSearchPipe } from '../../pipes/highlight.pipe';
     MatDialogModule,
     MatButtonModule,
     HighlightSearchPipe,
+    MatSelectModule,
   ],
   templateUrl: './change-table-random.component.html',
   styleUrls: ['./change-table-random.component.scss'],
@@ -39,6 +42,8 @@ export class ChangeTableRandomComponent implements AfterViewInit {
   }
 
   filterText = '';
+
+  readonly exportFormatOptions = ['csv', 'xls', 'xlsx', 'txt', 'html'];
 
   constructor(public dialog: MatDialog) {}
 
@@ -87,7 +92,7 @@ export class ChangeTableRandomComponent implements AfterViewInit {
 
   viewChanges(elementId: number) {
     this.dialog.open(ViewChangeComponent, {
-      data: {dataSource: this.dataSource.data, id: elementId},
+      data: { dataSource: this.dataSource.data, id: elementId },
       width: '50%',
     });
   }
@@ -97,5 +102,14 @@ export class ChangeTableRandomComponent implements AfterViewInit {
     searchInput.value = '';
 
     this.dataSource.filter = '';
+  }
+
+  exportTableData(formatType, exportOnlyVisibleRows = true) {
+    TableUtil.exportTableToExcel(
+      'releaseNotesDataTable',
+      formatType,
+      this.dataSource.data,
+      exportOnlyVisibleRows
+    );
   }
 }

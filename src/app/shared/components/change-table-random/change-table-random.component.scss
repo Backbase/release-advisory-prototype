@@ -64,4 +64,15 @@
       color: var(--primary-color);
     }
   }
+
+  .export-data-wrapper {
+    display: flex;
+    justify-content: end;
+    margin: 0 1em 1em 0;
+    .export-container {
+      display: flex;
+      align-items: baseline;
+      gap: 1em;
+    }
+  }
 }
