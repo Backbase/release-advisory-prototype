@@ -16,98 +16,129 @@
       </button>
     </mat-form-field>
   </div>
-<div class="table-container">
-  <table
-  mat-table
-  [dataSource]="dataSource"
-  class="mat-elevation-z8"
-  matSort
-  matSortActive="Calver"
-  matSortDirection="asc">
-  <ng-container matColumnDef="Calver">
-    <th mat-header-cell *matHeaderCellDef>Calver</th>
-    <td
-      mat-cell
-      *matCellDef="let element"
-      [innerHTML]="'v' + element.calVer | highlightSearch : filterText"
-    ></td>
-  </ng-container>
-
-  <ng-container matColumnDef="Product">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Product</th>
-    <td
-      mat-cell
-      *matCellDef="let element"
-      [innerHTML]="element.product | highlightSearch : filterText"
-    ></td>
-  </ng-container>
-
-  <ng-container matColumnDef="Component">
-    <th mat-header-cell *matHeaderCellDef>Software Component</th>
-    <td
-      mat-cell
-      *matCellDef="let element"
-      [innerHTML]="element.component | highlightSearch : filterText"
-    ></td>
-  </ng-container>
-
-  <ng-container matColumnDef="Version">
-    <th mat-header-cell *matHeaderCellDef>Version</th>
-    <td
-      mat-cell
-      *matCellDef="let element"
-      [innerHTML]="'v' + element.version | highlightSearch : filterText"
-    ></td>
-  </ng-container>
-
-  <ng-container matColumnDef="Change">
-    <th mat-header-cell *matHeaderCellDef>Change</th>
-    <td
-      mat-cell
-      *matCellDef="let element"
-      [innerHTML]="element.title | highlightSearch : filterText"
-    ></td>
-  </ng-container>
-
-  <ng-container matColumnDef="Discipline">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Discipline</th>
-    <td
-      mat-cell
-      *matCellDef="let element"
-      [innerHTML]="element.discipline | highlightSearch : filterText"
-    ></td>
-  </ng-container>
-
-  <ng-container matColumnDef="Change Type">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Change type</th>
-    <td mat-cell *matCellDef="let element">
-      <span
-        class="custom-chip"
-        [class]="element.changeType.color"
-        [innerHTML]="element.changeType.name | highlightSearch : filterText"
+  <div class="export-data-wrapper">
+    <div class="export-container">
+      <mat-form-field appearance="fill">
+        <mat-label>Export Table data</mat-label>
+        <mat-select #exportFormatTypeInput value="csv">
+          <mat-option
+            *ngFor="let format of exportFormatOptions"
+            [value]="format"
+          >
+            {{ format }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="exportTableData(exportFormatTypeInput.value)"
       >
-      </span>
-    </td>
-  </ng-container>
+        Export
+      </button>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="exportTableData(exportFormatTypeInput.value, false)"
+      >
+        Export All
+      </button>
+    </div>
+  </div>
 
-  <ng-container matColumnDef="View">
-    <th mat-header-cell *matHeaderCellDef></th>
-    <td mat-cell *matCellDef="let element">
-      <mat-icon
-        class="view-icon"
-        aria-hidden="false"
-        aria-label="visibility"
-        fontIcon="visibility"
-        (click)="viewChanges(element.id)"
-      ></mat-icon>
-    </td>
-  </ng-container>
+  <div class="table-container">
+    <table
+      id="releaseNotesDataTable"
+      mat-table
+      [dataSource]="dataSource"
+      class="mat-elevation-z8"
+      matSort
+      matSortActive="Calver"
+      matSortDirection="asc"
+    >
+      <ng-container matColumnDef="Calver">
+        <th mat-header-cell *matHeaderCellDef>Calver</th>
+        <td
+          mat-cell
+          *matCellDef="let element"
+          [innerHTML]="'v' + element.calVer | highlightSearch : filterText"
+        ></td>
+      </ng-container>
 
+      <ng-container matColumnDef="Product">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Product</th>
+        <td
+          mat-cell
+          *matCellDef="let element"
+          [innerHTML]="element.product | highlightSearch : filterText"
+        ></td>
+      </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-</table>
-</div>
+      <ng-container matColumnDef="Component">
+        <th mat-header-cell *matHeaderCellDef>Software Component</th>
+        <td
+          mat-cell
+          *matCellDef="let element"
+          [innerHTML]="element.component | highlightSearch : filterText"
+        ></td>
+      </ng-container>
+
+      <ng-container matColumnDef="Version">
+        <th mat-header-cell *matHeaderCellDef>Version</th>
+        <td
+          mat-cell
+          *matCellDef="let element"
+          [innerHTML]="'v' + element.version | highlightSearch : filterText"
+        ></td>
+      </ng-container>
+
+      <ng-container matColumnDef="Change">
+        <th mat-header-cell *matHeaderCellDef>Change</th>
+        <td
+          mat-cell
+          *matCellDef="let element"
+          [innerHTML]="element.title | highlightSearch : filterText"
+        ></td>
+      </ng-container>
+
+      <ng-container matColumnDef="Discipline">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Discipline</th>
+        <td
+          mat-cell
+          *matCellDef="let element"
+          [innerHTML]="element.discipline | highlightSearch : filterText"
+        ></td>
+      </ng-container>
+
+      <ng-container matColumnDef="Change Type">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Change type</th>
+        <td mat-cell *matCellDef="let element">
+          <span
+            class="custom-chip"
+            [class]="element.changeType.color"
+            [innerHTML]="element.changeType.name | highlightSearch : filterText"
+          >
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="View">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <mat-icon
+            class="view-icon"
+            aria-hidden="false"
+            aria-label="visibility"
+            fontIcon="visibility"
+            (click)="viewChanges(element.id)"
+          ></mat-icon>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
   <mat-paginator
     showFirstLastButtons
     [length]="dataSource.data.length"
