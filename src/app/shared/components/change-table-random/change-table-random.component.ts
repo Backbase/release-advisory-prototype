@@ -43,7 +43,7 @@ export class ChangeTableRandomComponent implements AfterViewInit {
 
   filterText = '';
 
-  readonly exportFormatOptions = ['xlsx', 'csv', 'txt', 'html'];
+  readonly exportFormatOptions = ['csv', 'xls', 'xlsx', 'txt', 'html'];
 
   constructor(public dialog: MatDialog) {}
 
