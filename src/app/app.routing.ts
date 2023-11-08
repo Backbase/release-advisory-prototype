@@ -35,6 +35,13 @@ export const APP_ROUTES: Routes = [
       ),
   },
   {
+    path: 'backend-services',
+    loadComponent: () =>
+      import('./topstack-values/topstack-values.component').then(
+        (m) => m.TopstackValuesComponent
+      ),
+  },
+  {
     path: '**',
     redirectTo: 'prototype-one',
   },

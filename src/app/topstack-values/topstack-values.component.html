@@ -1,0 +1,17 @@
+<div class="container">
+  <h1>Service Dependencies for Backend for Calver 2023.03.8</h1>
+  <mat-form-field>
+    <mat-label>Select Product</mat-label>
+    <mat-select (selectionChange)="getServicesForRetail($event.value)">
+      <mat-option *ngFor="let product of products" [value]="product">
+        {{product}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <div>
+    <mat-list role="list">
+        <mat-list-item role="listitem" *ngFor="let service of filteredData | keyvalue; let i = index"> {{i+1}}) {{ service.key }}</mat-list-item>
+      </mat-list>
+  </div>
+</div>

@@ -1,0 +1,44 @@
+[
+  {
+    "image-name": "backbase-identity",
+    "artifact-name": "backbase-identity-data"
+  }, {
+    "image-name": "identity-integration",
+    "artifact-name": "identity-integration-service"
+  },
+  {
+    "image-name": "oidc-token-converter",
+    "artifact-name": "oidc-token-converter-service"
+  }, {
+    "image-name": "orchestration",
+    "artifact-name": "identity-orchestration"
+  },
+  {
+    "image-name": "pushintegrationservice",
+    "artifact-name": "push-integration-service"
+  },
+  {
+    "image-name": "audit",
+    "artifact-name": "audit-service"
+  },
+  {
+    "image-name": "legalentity-integration-service",
+    "artifact-name": "legalentity-integration-service"
+  },
+  {
+    "image-name": "cashflow",
+    "artifact-name": "cashflow-service"
+  },
+  {
+    "image-name": "messages",
+    "artifact-name": "messages-service"
+  },
+  {
+    "image-name": "notifications",
+    "artifact-name": "notifications-service"
+  },
+  {
+    "image-name": "customer-provider-integration-service",
+    "artifact-name": "customer-provider-integrator-service-api"
+  }
+]
