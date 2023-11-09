@@ -147,7 +147,7 @@ export function generateChangesData(
     data.changes.push(change);
     if (
       data.changes.length &&
-      data.changes.length % randomIntFromInterval(2, 5) === 0
+      data.changes.length % randomIntFromInterval(40, 50) === 0
     ) {
       calVer = incrementCalVer(calVer);
     }
