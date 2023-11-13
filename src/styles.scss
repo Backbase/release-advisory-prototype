@@ -2,6 +2,7 @@
 
 @use './themes/custom.scss';
 @use './app/shared/styles/shared.scss';
+@import '~quill/dist/quill.snow.css';
 
 html,
 body {
