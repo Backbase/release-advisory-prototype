@@ -3,6 +3,9 @@
 @use './themes/custom.scss';
 @use './app/shared/styles/shared.scss';
 @import '~quill/dist/quill.snow.css';
+@import 'prismjs/themes/prism-okaidia.css';
+@import 'prismjs/plugins/line-numbers/prism-line-numbers.css';
+@import 'prismjs/plugins/line-highlight/prism-line-highlight.css';
 
 html,
 body {
@@ -14,4 +17,11 @@ body {
   margin: 0;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
   font-size: 16px;
+}
+
+
+blockquote {
+  border-left: 3px solid rgba(0,0,0,0.21);
+  padding-left: 12px;
+  color: rgba(0,0,0,0.54);
 }
