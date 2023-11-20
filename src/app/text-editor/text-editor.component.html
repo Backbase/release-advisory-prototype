@@ -1,0 +1,41 @@
+<div class="container">
+    <h1>ckeditor</h1>
+    <ckeditor
+      #myEditor
+      [editor]="Editor"
+      [data]="data"
+      (change)="onChange($event)"
+      data="<p>Hello, world!</p>"
+    ></ckeditor>
+    <input type="button" value="Get Data" (click)="getDataEditor()" />
+    
+    <h1 style="margin-top: 20px">TinyMce</h1>
+    <editor
+      apiKey="dlphxva3exk21vfz55mt4f1g9izfbpfrkazkltc2xjrlc6tp"
+      [(ngModel)]="htmlContent"
+      [init]="{
+        height: 200,
+        menubar: false,
+        plugins: [
+          'advlist autolink lists link image charmap print preview anchor',
+          'searchreplace visualblocks code fullscreen',
+          'insertdatetime media table paste code help wordcount'
+        ],
+        toolbar:
+          'undo redo | formatselect | bold italic backcolor | \
+           alignleft aligncenter alignright alignjustify | \
+           bullist numlist outdent indent | removeformat | help'
+      }"
+    ></editor>
+    <input type="button" value="Get Data" (click)="getDataTiny()" />
+    
+    <h1 style="margin-top: 20px"> Quill</h1>
+    
+    <quill-editor [modules]="modules" [(ngModel)]="model"></quill-editor>
+    <input type="button" value="Get Data" (click)="getDataQuill()" />
+    
+    
+    <h1 style="margin-top: 20px"> Markdown Editor</h1>
+    <textarea class="variable-textarea" [(ngModel)]="markdown"></textarea>
+    <div markdown class="variable-binding" [data]="markdown"></div>
+</div>

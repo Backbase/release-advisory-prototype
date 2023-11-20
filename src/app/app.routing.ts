@@ -35,6 +35,13 @@ export const APP_ROUTES: Routes = [
       ),
   },
   {
+    path: 'text-editor',
+    loadComponent: () =>
+      import('./text-editor/text-editor.component').then(
+        (m) => m.TextEditorComponent
+      ),
+  },
+  {
     path: '**',
     redirectTo: 'prototype-one',
   },
